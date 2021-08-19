@@ -7,6 +7,7 @@
 #
 
 add_library(maw STATIC
+        maw/audio.cpp
         maw/maw.cpp)
 
 target_link_libraries(maw PRIVATE miniaudio)

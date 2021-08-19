@@ -22,5 +22,7 @@ endfunction()
 
 #
 
-add("test_simple")
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/sample.mp3 DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+add("test_simple")
+add("test_audio")
