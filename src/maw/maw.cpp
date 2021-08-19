@@ -81,15 +81,7 @@ void oo::maw::play(const std::string &path) {
 
     auto device = it->second;
     if (ma_device_start(device) != MA_SUCCESS) {
-        auto payload = static_cast<callback_payload *>(device->pUserData);
-
-        ma_device_uninit(device);
-        delete device;
-
-        auto &decoder = payload->decoder;
-        ma_decoder_uninit(&decoder);
-        delete payload;
-
+        destroy_device(device);
         m_devices.erase(path);
     }
 }
@@ -102,25 +94,28 @@ void oo::maw::stop(const std::string &path) {
 
     auto device = it->second;
     if (ma_device_stop(device) != MA_SUCCESS) {
-        auto payload = static_cast<callback_payload *>(device->pUserData);
-
-        ma_device_uninit(device);
-        delete device;
-
-        auto &decoder = payload->decoder;
-        ma_decoder_uninit(&decoder);
-        delete payload;
-
+        destroy_device(device);
         m_devices.erase(path);
     }
 }
 
 oo::maw::~maw() {
     for (const auto &[path, device] : m_devices) {
-        m_queue.push(device);
+        destroy_device(device);
     }
     m_queue.set_done();
     m_service_thread->join();
+}
+
+void oo::maw::destroy_device(ma_device *device) {
+    auto payload = static_cast<callback_payload *>(device->pUserData);
+
+    ma_device_uninit(device);
+    delete device;
+
+    auto &decoder = payload->decoder;
+    ma_decoder_uninit(&decoder);
+    delete payload;
 }
 
 void oo::maw::run_service_thread() {
@@ -131,11 +126,7 @@ void oo::maw::run_service_thread() {
                 continue;
             }
 
-            auto decoder = static_cast<ma_decoder *>(device->pUserData);
-
             ma_device_stop(device);
-            ma_device_uninit(device);
-            ma_decoder_uninit(decoder);
         }
     });
 }

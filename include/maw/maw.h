@@ -43,6 +43,10 @@ namespace oo {
 
     private:
 
+        static void destroy_device(ma_device *device);
+
+    private:
+
         void run_service_thread();
 
     };
