@@ -6,9 +6,21 @@
 #  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
 #
 
+set(MAW_SRC
+        maw/audio.cpp)
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "iOS")
+    list(APPEND MAW_SRC
+            maw/maw.mm)
+else ()
+    list(APPEND MAW_SRC
+            maw/maw.cpp)
+endif ()
+
 add_library(maw STATIC
-        maw/audio.cpp
-        maw/maw.cpp)
+        ${MAW_SRC})
+
+#
 
 target_link_libraries(maw PRIVATE miniaudio)
 
