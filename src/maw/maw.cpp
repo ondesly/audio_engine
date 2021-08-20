@@ -80,9 +80,16 @@ void oo::maw::play(const std::string &path) {
     }
 
     auto device = it->second;
-    if (ma_device_start(device) != MA_SUCCESS) {
-        destroy_device(device);
-        m_devices.erase(path);
+    const auto result = ma_device_start(device);
+
+    switch (result) {
+        case MA_SUCCESS:
+        case MA_INVALID_OPERATION:
+            break;
+        default:
+            destroy_device(device);
+            m_devices.erase(path);
+            return;
     }
 }
 
@@ -93,9 +100,30 @@ void oo::maw::stop(const std::string &path) {
     }
 
     auto device = it->second;
-    if (ma_device_stop(device) != MA_SUCCESS) {
-        destroy_device(device);
-        m_devices.erase(path);
+    auto result = ma_device_stop(device);
+
+    switch (result) {
+        case MA_SUCCESS:
+        case MA_INVALID_OPERATION:
+            break;
+        default:
+            destroy_device(device);
+            m_devices.erase(path);
+            return;
+    }
+
+    auto payload = static_cast<callback_payload *>(device->pUserData);
+    auto &decoder = payload->decoder;
+    result = ma_decoder_seek_to_pcm_frame(&decoder, 0);
+
+    switch (result) {
+        case MA_SUCCESS:
+        case MA_INVALID_OPERATION:
+            break;
+        default:
+            destroy_device(device);
+            m_devices.erase(path);
+            return;
     }
 }
 
@@ -127,6 +155,10 @@ void oo::maw::run_service_thread() {
             }
 
             ma_device_stop(device);
+
+            auto payload = static_cast<callback_payload *>(device->pUserData);
+            auto &decoder = payload->decoder;
+            ma_decoder_seek_to_pcm_frame(&decoder, 0);
         }
     });
 }
