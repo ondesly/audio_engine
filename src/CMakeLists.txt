@@ -12,6 +12,10 @@ set(MAW_SRC
 if (${CMAKE_SYSTEM_NAME} MATCHES "iOS")
     list(APPEND MAW_SRC
             maw/maw.mm)
+elseif (ANDROID)
+    list(APPEND MAW_SRC
+            maw/a_asset_vfs.cpp
+            maw/maw.cpp)
 else ()
     list(APPEND MAW_SRC
             maw/maw.cpp)

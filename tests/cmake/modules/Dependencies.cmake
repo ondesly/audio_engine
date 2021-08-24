@@ -16,5 +16,8 @@ function(target_link_system_libraries target)
         target_link_libraries(${target} PRIVATE
                 ${AV_FOUNDATION_LIBRARY}
                 ${AUDIO_TOOLBOX_LIBRARY})
+    elseif (ANDROID)
+        target_link_libraries(${target} PRIVATE
+                android)
     endif ()
 endfunction()

@@ -1,0 +1,9 @@
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/app/.cxx
+/app/build
+/app/src/main/assets
+/gradlew
+/gradlew.bat

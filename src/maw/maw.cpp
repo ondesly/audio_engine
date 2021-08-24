@@ -10,6 +10,8 @@
 
 #include <miniaudio.h>
 
+#include "maw/a_asset_vfs.h"
+
 #include "maw/maw.h"
 
 namespace {
@@ -47,10 +49,22 @@ void oo::maw::load(const std::string &path) {
     auto payload = new callback_payload{m_queue, ma_decoder{}};
 
     auto &decoder = payload->decoder;
+
+#if defined(ANDROID)
+    oo::a_asset_vfs a_asset{};
+    auto vfs = a_asset.create_vfs();
+
+    if (ma_decoder_init_vfs(vfs, path.c_str(), nullptr, &decoder) != MA_SUCCESS) {
+        a_asset.delete_vfs(vfs);
+        delete payload;
+        return;
+    }
+#else
     if (ma_decoder_init_file(path.c_str(), nullptr, &decoder) != MA_SUCCESS) {
         delete payload;
         return;
     }
+#endif
 
     ma_device_config device_config;
     device_config = ma_device_config_init(ma_device_type_playback);

@@ -8,6 +8,8 @@
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "iOS")
     add_subdirectory(ios)
+elseif (ANDROID)
+    add_subdirectory(android)
 else ()
     add_subdirectory(other)
 endif ()
