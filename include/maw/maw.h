@@ -13,9 +13,8 @@
 #include <thread>
 #include <unordered_map>
 
+#include "maw/controller.h"
 #include "maw/waiting_queue.h"
-
-typedef struct ma_device ma_device;
 
 namespace oo {
 
@@ -37,13 +36,7 @@ namespace oo {
     private:
 
         std::unique_ptr<std::thread> m_service_thread;
-        oo::waiting_queue<ma_device *> m_queue;
-
-        std::unordered_map<std::string, ma_device *> m_devices;
-
-    private:
-
-        static void destroy_device(ma_device *device);
+        oo::waiting_queue<std::pair<controller::command, std::string>> m_queue;
 
     private:
 

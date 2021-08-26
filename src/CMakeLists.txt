@@ -7,7 +7,8 @@
 #
 
 set(MAW_SRC
-        maw/audio.cpp)
+        maw/audio.cpp
+        maw/controller.cpp)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "iOS")
     list(APPEND MAW_SRC
