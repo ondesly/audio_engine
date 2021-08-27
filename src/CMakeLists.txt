@@ -8,14 +8,14 @@
 
 set(MAW_SRC
         maw/audio.cpp
-        maw/controller.cpp)
+        maw/controller.cpp
+        maw/decoder.cpp)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "iOS")
     list(APPEND MAW_SRC
             maw/maw.mm)
 elseif (ANDROID)
     list(APPEND MAW_SRC
-            maw/a_asset_vfs.cpp
             maw/maw.cpp)
 else ()
     list(APPEND MAW_SRC

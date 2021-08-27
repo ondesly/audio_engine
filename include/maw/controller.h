@@ -14,9 +14,10 @@
 #include <unordered_map>
 
 typedef struct ma_device ma_device;
-typedef struct ma_decoder ma_decoder;
 
 namespace oo {
+
+    class decoder;
 
     class controller {
     public:
@@ -31,7 +32,7 @@ namespace oo {
     public:
 
         const std::function<void(oo::controller::command, const std::string &)> m_command_fn;
-        std::unordered_map<std::string, ma_decoder *> m_playing;
+        std::unordered_map<std::string, std::shared_ptr<oo::decoder>> m_playing;
 
     public:
 
@@ -53,7 +54,7 @@ namespace oo {
 
         std::unique_ptr<ma_device> m_device;
 
-        std::unordered_map<std::string, ma_decoder *> m_decoders;
+        std::unordered_map<std::string, std::shared_ptr<oo::decoder>> m_decoders;
 
     };
 
