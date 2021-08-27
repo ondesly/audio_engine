@@ -99,13 +99,13 @@ bool oo::controller::play(const std::string &path) {
         return false;
     }
 
+    std::lock_guard<std::mutex> lock(s_playing_mutex);
+
     if (m_device->state == 1) {
         if (ma_device_start(m_device.get()) != MA_SUCCESS) {
             return false;
         }
     }
-
-    std::lock_guard<std::mutex> lock(s_playing_mutex);
 
     const auto &decoder = m_decoders[path];
     m_playing.emplace(path, decoder);
