@@ -7,7 +7,6 @@
 //
 
 #include "maw/controller.h"
-#include "maw/a_asset_vfs.h"
 
 #include "maw/maw.h"
 

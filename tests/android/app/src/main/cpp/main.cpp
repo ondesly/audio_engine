@@ -9,7 +9,7 @@
 #include <android/asset_manager_jni.h>
 #include <jni.h>
 
-#include "maw/a_asset_vfs.h"
+#include "maw/a_asset_manager_holder.h"
 #include "maw/audio.h"
 
 namespace {
@@ -47,7 +47,8 @@ JNIEXPORT void JNICALL
 Java_com_github_ondesly_maw_test_MainActivity_setAssetManager(JNIEnv *env,
                                                               jobject /* this */,
                                                               jobject j_asset_manager) {
-    oo::a_asset_vfs vfs{AAssetManager_fromJava(env, j_asset_manager)};
+    oo::a_asset_manager_holder holder{};
+    holder.set(AAssetManager_fromJava(env, j_asset_manager));
 }
 
 }

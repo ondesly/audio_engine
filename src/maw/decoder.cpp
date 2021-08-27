@@ -8,6 +8,8 @@
 
 #include "maw/decoder.h"
 
+oo::decoder::decoder() = default;
+
 oo::decoder::~decoder() {
     ma_decoder_uninit(&m_decoder);
 }

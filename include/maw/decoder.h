@@ -18,6 +18,8 @@ namespace oo {
     class decoder {
     public:
 
+        decoder();
+
         ~decoder();
 
     public:
@@ -36,7 +38,7 @@ namespace oo {
 
     private:
 
-        ma_decoder m_decoder;
+        ma_decoder m_decoder = {};
 
     };
 
