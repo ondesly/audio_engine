@@ -16,17 +16,17 @@ int main() {
     std::cout << "initialized...";
     std::getchar();
 
-    audio.load("sample.mp3");
+    audio.load_async("sample.mp3");
 
     std::cout << "loaded...";
     std::getchar();
 
-    audio.play("sample.mp3");
+    audio.play_async("sample.mp3");
 
     std::cout << "playing...";
     std::getchar();
 
-    audio.stop("sample.mp3");
+    audio.stop_async("sample.mp3");
 
     std::cout << "stopped...";
     std::getchar();

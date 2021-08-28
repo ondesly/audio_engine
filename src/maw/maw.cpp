@@ -6,7 +6,12 @@
 //  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
 //
 
-#include "maw/controller.h"
+#define MINIAUDIO_IMPLEMENTATION
+
+#include <miniaudio.h>
+
+#include "maw/decoder.h"
+#include "maw/device.h"
 
 #include "maw/maw.h"
 
@@ -14,16 +19,20 @@ oo::maw::maw() {
     run_service_thread();
 }
 
-void oo::maw::load(const std::string &path) {
-    m_queue.push({controller::command::load, path});
+void oo::maw::load_async(const std::string &path) {
+    m_queue.push({maw::command::load, path});
 }
 
-void oo::maw::play(const std::string &path) {
-    m_queue.push({controller::command::play, path});
+void oo::maw::play_async(const std::string &path) {
+    m_queue.push({maw::command::play, path});
 }
 
-void oo::maw::stop(const std::string &path) {
-    m_queue.push({controller::command::stop, path});
+void oo::maw::stop_async(const std::string &path) {
+    m_queue.push({maw::command::stop, path});
+}
+
+void oo::maw::reset_async(const std::string &path) {
+    m_queue.push({maw::command::reset, path});
 }
 
 oo::maw::~maw() {
@@ -33,26 +42,101 @@ oo::maw::~maw() {
 
 void oo::maw::run_service_thread() {
     m_service_thread = std::make_unique<std::thread>([&]() {
-        controller controller{[&](controller::command command, const std::string &path) {
-            m_queue.push({command, path});
+        oo::device device{[this](float *output, uint32_t frame_count, uint32_t channel_count) {
+            device_callback(output, frame_count, channel_count);
         }};
+
         while (m_queue.wait()) {
             const auto command = m_queue.pop();
+            const auto &path = command.second;
 
             switch (command.first) {
-                case controller::command::load:
-                    controller.load(command.second);
+                case command::load:
+                    load(device, path);
                     break;
-                case controller::command::play:
-                    controller.play(command.second);
+                case command::play:
+                    play(device, path);
                     break;
-                case controller::command::stop:
-                    controller.stop(command.second);
+                case command::stop:
+                    stop(device, path);
                     break;
-                case controller::command::reset:
-                    controller.reset(command.second);
+                case command::reset:
+                    reset(device, path);
                     break;
             }
         }
     });
+}
+
+void oo::maw::device_callback(float *output, uint32_t frame_count, uint32_t channel_count) {
+    float buf[channel_count * frame_count];
+    bool end = true;
+
+    for (const auto &[path, decoder]: m_playing) {
+        const auto read = decoder->read(buf, frame_count);
+        for (size_t i = 0; i < read * channel_count; ++i) {
+            output[i] += buf[i];
+        }
+
+        //
+
+        if (read < frame_count) {
+            stop_async(path);
+            reset_async(path);
+        } else {
+            end = false;
+        }
+    }
+
+    if (end) {
+        stop_async();
+    }
+}
+
+void oo::maw::load(oo::device &device, const std::string &path) {
+    const auto decoder = std::make_shared<oo::decoder>();
+
+    if (!decoder->init(path)) {
+        return;
+    }
+
+    if (!device.is_inited()) {
+        if (!device.init(decoder->get_output_format(),
+                         decoder->get_output_channels(),
+                         decoder->get_output_sample_rate())) {
+            return;
+        }
+    }
+
+    m_decoders.emplace(path, decoder);
+}
+
+void oo::maw::play(oo::device &device, const std::string &path) {
+    if (!device.is_inited()) {
+        return;
+    }
+
+    if (!device.is_started()) {
+        if (!device.start()) {
+            return;
+        }
+    }
+
+    const auto &decoder = m_decoders[path];
+    m_playing.emplace(path, decoder);
+}
+
+void oo::maw::stop(oo::device &device, const std::string &path) {
+    if (path.empty()) {
+        if (!device.is_stopped()) {
+            device.stop();
+        }
+    } else {
+        m_playing.erase(path);
+    }
+}
+
+void oo::maw::reset(oo::device &device, const std::string &path) {
+    const auto &decoder = m_decoders[path];
+    decoder->seek(0);
 }

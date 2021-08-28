@@ -25,13 +25,13 @@ oo::audio::audio() {
 }
 
 void oo::audio::load(const std::string &path) { // NOLINT(readability-convert-member-functions-to-static)
-    s_maw->load(path);
+    s_maw->load_async(path);
 }
 
 void oo::audio::play(const std::string &path) { // NOLINT(readability-convert-member-functions-to-static)
-    s_maw->play(path);
+    s_maw->play_async(path);
 }
 
 void oo::audio::stop(const std::string &path) { // NOLINT(readability-convert-member-functions-to-static)
-    s_maw->stop(path);
+    s_maw->stop_async(path);
 }
