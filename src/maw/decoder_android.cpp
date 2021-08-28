@@ -103,8 +103,12 @@ bool oo::decoder::init(const std::string &path) {
     return ma_decoder_init_vfs(&s_vfs, path.c_str(), nullptr, &m_decoder) == MA_SUCCESS;
 }
 
-ma_uint64 oo::decoder::read(float *out, ma_uint64 count) {
-    return ma_decoder_read_pcm_frames(&m_decoder, out, count);
+ma_uint64 oo::decoder::read(float *output, float *buf, ma_uint64 frame_count, ma_uint64 channel_count) {
+    const auto read = ma_decoder_read_pcm_frames(&m_decoder, buf, frame_count);
+    for (size_t i = 0; i < read * channel_count; ++i) {
+        output[i] += buf[i];
+    }
+    return read;
 }
 
 bool oo::decoder::seek(ma_uint64 frame) {

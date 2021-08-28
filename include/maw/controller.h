@@ -12,6 +12,7 @@
 #include <string>
 #include <thread>
 #include <unordered_map>
+#include <vector>
 
 #include "maw/waiting_queue.h"
 
@@ -54,6 +55,8 @@ namespace oo {
 
         std::unordered_map<std::string, std::shared_ptr<oo::decoder>> m_decoders;
         std::unordered_map<std::string, std::shared_ptr<oo::decoder>> m_playing;
+
+        std::vector<float> m_callback_buf;
 
     private:
 

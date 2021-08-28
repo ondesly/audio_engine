@@ -69,16 +69,11 @@ void oo::controller::run_service_thread() {
 }
 
 void oo::controller::device_callback(float *output, uint32_t frame_count, uint32_t channel_count) {
-    float buf[channel_count * frame_count];
+    m_callback_buf.resize(frame_count * channel_count);
     bool end = true;
 
     for (const auto &[path, decoder]: m_playing) {
-        const auto read = decoder->read(buf, frame_count);
-        for (size_t i = 0; i < read * channel_count; ++i) {
-            output[i] += buf[i];
-        }
-
-        //
+        const auto read = decoder->read(output, m_callback_buf.data(), frame_count, channel_count);
 
         if (read < frame_count) {
             stop_async(path);

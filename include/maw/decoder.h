@@ -26,7 +26,7 @@ namespace oo {
 
         bool init(const std::string &path);
 
-        ma_uint64 read(float *out, ma_uint64 count);
+        ma_uint64 read(float *output, float *buf, ma_uint64 frame_count, ma_uint64 channel_count);
 
         bool seek(ma_uint64 frame);
 
