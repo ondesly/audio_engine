@@ -27,6 +27,6 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/../res/sample2.mp3 DESTINATION ${CMAKE_CURRE
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/../res/sample3.mp3 DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/../res/sample4.mp3 DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-add("test_simple")
+add("test_controller")
 add("test_audio")
 add("test_multiple")

@@ -12,16 +12,16 @@ set(MAW_SRC
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "iOS")
     list(APPEND MAW_SRC
-            maw/decoder.cpp
-            maw/maw.mm)
+            maw/controller.mm
+            maw/decoder.cpp)
 elseif (ANDROID)
     list(APPEND MAW_SRC
-            maw/decoder_android.cpp
-            maw/maw.cpp)
+            maw/controller.cpp
+            maw/decoder_android.cpp)
 else ()
     list(APPEND MAW_SRC
-            maw/decoder.cpp
-            maw/maw.cpp)
+            maw/controller.cpp
+            maw/decoder.cpp)
 endif ()
 
 add_library(maw STATIC

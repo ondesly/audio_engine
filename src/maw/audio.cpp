@@ -8,30 +8,30 @@
 
 #include <memory>
 
-#include "maw/maw.h"
+#include "maw/controller.h"
 
 #include "maw/audio.h"
 
 namespace {
 
-    std::unique_ptr<oo::maw> s_maw;
+    std::unique_ptr<oo::controller> s_controller;
 
 }
 
 oo::audio::audio() {
-    if (!s_maw) {
-        s_maw = std::make_unique<oo::maw>();
+    if (!s_controller) {
+        s_controller = std::make_unique<oo::controller>();
     }
 }
 
 void oo::audio::load(const std::string &path) { // NOLINT(readability-convert-member-functions-to-static)
-    s_maw->load_async(path);
+    s_controller->load_async(path);
 }
 
 void oo::audio::play(const std::string &path) { // NOLINT(readability-convert-member-functions-to-static)
-    s_maw->play_async(path);
+    s_controller->play_async(path);
 }
 
 void oo::audio::stop(const std::string &path) { // NOLINT(readability-convert-member-functions-to-static)
-    s_maw->stop_async(path);
+    s_controller->stop_async(path);
 }

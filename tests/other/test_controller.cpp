@@ -1,5 +1,5 @@
 //
-//  test_simple.cpp
+//  test_controller.cpp
 //  maw
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 16.08.2021.
@@ -8,25 +8,25 @@
 
 #include <iostream>
 
-#include <maw/maw.h>
+#include <maw/controller.h>
 
 int main() {
-    oo::maw audio{};
+    oo::controller controller{};
 
     std::cout << "initialized...";
     std::getchar();
 
-    audio.load_async("sample.mp3");
+    controller.load_async("sample.mp3");
 
     std::cout << "loaded...";
     std::getchar();
 
-    audio.play_async("sample.mp3");
+    controller.play_async("sample.mp3");
 
     std::cout << "playing...";
     std::getchar();
 
-    audio.stop_async("sample.mp3");
+    controller.stop_async("sample.mp3");
 
     std::cout << "stopped...";
     std::getchar();
