@@ -27,6 +27,15 @@ namespace oo {
             m_condition.notify_one();
         }
 
+        template<typename... Args>
+        void emplace(Args &&... args) {
+            {
+                std::lock_guard<std::mutex> lock(m_mutex);
+                m_queue.template emplace(std::forward<Args>(args)...);
+            }
+            m_condition.notify_one();
+        }
+
         T pop() {
             std::lock_guard<std::mutex> lock(m_mutex);
 

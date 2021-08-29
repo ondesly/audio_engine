@@ -20,19 +20,19 @@ oo::controller::controller() {
 }
 
 void oo::controller::load_async(const std::string &path) {
-    m_queue.push({controller::command::load, path});
+    m_queue.emplace(controller::command::load, path);
 }
 
 void oo::controller::play_async(const std::string &path) {
-    m_queue.push({controller::command::play, path});
+    m_queue.emplace(controller::command::play, path);
 }
 
 void oo::controller::stop_async(const std::string &path) {
-    m_queue.push({controller::command::stop, path});
+    m_queue.emplace(controller::command::stop, path);
 }
 
 void oo::controller::reset_async(const std::string &path) {
-    m_queue.push({controller::command::reset, path});
+    m_queue.emplace(controller::command::reset, path);
 }
 
 oo::controller::~controller() {
