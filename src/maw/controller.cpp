@@ -46,7 +46,7 @@ void oo::controller::run_service_thread() {
             device_callback(output, frame_count, channel_count);
         }};
 
-        while (m_queue.wait()) {
+        while (!m_queue.is_done()) {
             const auto command = m_queue.pop();
             const auto &path = command.second;
 

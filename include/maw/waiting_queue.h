@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <atomic>
 #include <condition_variable>
 #include <mutex>
 #include <queue>
@@ -34,14 +35,18 @@ namespace oo {
             return t;
         }
 
-        bool wait() {
+        bool is_done() {
             std::unique_lock<std::mutex> lock(m_mutex);
 
-            while (m_queue.empty() && !m_is_done) {
+            while (m_queue.empty()) {
                 m_condition.wait(lock);
+
+                if (m_is_done) {
+                    return true;
+                }
             }
 
-            return !m_queue.empty() || !m_is_done;
+            return false;
         }
 
         void set_done() {
@@ -51,7 +56,7 @@ namespace oo {
 
     private:
 
-        bool m_is_done = false;
+        std::atomic<bool> m_is_done{false};
 
         std::queue<T> m_queue;
         mutable std::mutex m_mutex;
