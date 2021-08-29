@@ -1,5 +1,5 @@
 //
-//  waiting_queue.h
+//  blocking_queue.h
 //  maw
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 18.08.2021.
@@ -16,7 +16,7 @@
 namespace oo {
 
     template<class T>
-    class waiting_queue {
+    class blocking_queue {
     public:
 
         void push(const T &t) {

@@ -14,7 +14,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "maw/waiting_queue.h"
+#include "maw/blocking_queue.h"
 
 namespace oo {
 
@@ -51,7 +51,7 @@ namespace oo {
     private:
 
         std::unique_ptr<std::thread> m_service_thread;
-        oo::waiting_queue<std::pair<controller::command, std::string>> m_queue;
+        oo::blocking_queue<std::pair<controller::command, std::string>> m_queue;
 
         std::unordered_map<std::string, std::shared_ptr<oo::decoder>> m_decoders;
         std::unordered_map<std::string, std::shared_ptr<oo::decoder>> m_playing;
