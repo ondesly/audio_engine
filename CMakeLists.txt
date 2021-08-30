@@ -29,13 +29,20 @@ include(FetchContent)
 #
 
 FetchContent_Declare(
+        blocking_queue
+        GIT_REPOSITORY https://github.com/ondesly/blocking_queue.git
+        GIT_TAG v1.0.0
+        GIT_SHALLOW TRUE
+        GIT_PROGRESS TRUE)
+
+FetchContent_Declare(
         miniaudio
         GIT_REPOSITORY https://github.com/ondesly/miniaudio.git
         GIT_TAG v0.10.41
         GIT_SHALLOW TRUE
         GIT_PROGRESS TRUE)
 
-FetchContent_MakeAvailable(miniaudio)
+FetchContent_MakeAvailable(blocking_queue miniaudio)
 
 #########
 # Build #

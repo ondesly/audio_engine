@@ -14,7 +14,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "maw/blocking_queue.h"
+#include <blocking_queue/blocking_queue.h>
 
 namespace oo {
 
