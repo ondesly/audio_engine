@@ -10,7 +10,7 @@
 #include <thread>
 #include <vector>
 
-#include <maw/controller.h>
+#include <maw/player.h>
 
 int main() {
     std::vector<std::string> paths{
@@ -20,18 +20,18 @@ int main() {
             "sample4.mp3"
     };
 
-    oo::controller audio{};
-    for (const auto &path : paths) {
-        audio.load_async(path);
+    oo::player player{};
+    for (const auto &path: paths) {
+        player.load_async(path);
     }
 
     srand(time(nullptr)); // NOLINT(cert-msc51-cpp)
     std::thread t([&]() {
         for (size_t i = 0; i < 100; ++i) {
             if (rand() % 3 == 0) { // NOLINT(cert-msc50-cpp)
-                audio.stop_async(paths[rand() % 4]); // NOLINT(cert-msc50-cpp)
+                player.stop_async(paths[rand() % 4]); // NOLINT(cert-msc50-cpp)
             } else {
-                audio.play_async(paths[rand() % 4]); // NOLINT(cert-msc50-cpp)
+                player.play_async(paths[rand() % 4]); // NOLINT(cert-msc50-cpp)
             }
             using namespace std::chrono_literals;
             std::this_thread::sleep_for(300ms);

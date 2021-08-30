@@ -1,5 +1,5 @@
 //
-//  controller.cpp
+//  player.cpp
 //  maw
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 15.08.2021.
@@ -13,34 +13,34 @@
 #include "maw/decoder.h"
 #include "maw/device.h"
 
-#include "maw/controller.h"
+#include "maw/player.h"
 
-oo::controller::controller() {
+oo::player::player() {
     run_service_thread();
 }
 
-void oo::controller::load_async(const std::string &path) {
-    m_queue.emplace(controller::command::load, path);
+void oo::player::load_async(const std::string &path) {
+    m_queue.emplace(player::command::load, path);
 }
 
-void oo::controller::play_async(const std::string &path) {
-    m_queue.emplace(controller::command::play, path);
+void oo::player::play_async(const std::string &path) {
+    m_queue.emplace(player::command::play, path);
 }
 
-void oo::controller::stop_async(const std::string &path) {
-    m_queue.emplace(controller::command::stop, path);
+void oo::player::stop_async(const std::string &path) {
+    m_queue.emplace(player::command::stop, path);
 }
 
-void oo::controller::reset_async(const std::string &path) {
-    m_queue.emplace(controller::command::reset, path);
+void oo::player::reset_async(const std::string &path) {
+    m_queue.emplace(player::command::reset, path);
 }
 
-oo::controller::~controller() {
+oo::player::~player() {
     m_queue.set_done();
     m_service_thread->join();
 }
 
-void oo::controller::run_service_thread() {
+void oo::player::run_service_thread() {
     m_service_thread = std::make_unique<std::thread>([&]() {
         oo::device device{[this](float *output, uint32_t frame_count, uint32_t channel_count) {
             device_callback(output, frame_count, channel_count);
@@ -68,7 +68,7 @@ void oo::controller::run_service_thread() {
     });
 }
 
-void oo::controller::device_callback(float *output, uint32_t frame_count, uint32_t channel_count) {
+void oo::player::device_callback(float *output, uint32_t frame_count, uint32_t channel_count) {
     m_callback_buf.resize(frame_count * channel_count);
     bool end = true;
 
@@ -88,7 +88,7 @@ void oo::controller::device_callback(float *output, uint32_t frame_count, uint32
     }
 }
 
-void oo::controller::load(oo::device &device, const std::string &path) {
+void oo::player::load(oo::device &device, const std::string &path) {
     const auto decoder = std::make_shared<oo::decoder>();
 
     if (!decoder->init(path)) {
@@ -106,7 +106,7 @@ void oo::controller::load(oo::device &device, const std::string &path) {
     m_decoders.emplace(path, decoder);
 }
 
-void oo::controller::play(oo::device &device, const std::string &path) {
+void oo::player::play(oo::device &device, const std::string &path) {
     if (!device.is_inited()) {
         return;
     }
@@ -121,7 +121,7 @@ void oo::controller::play(oo::device &device, const std::string &path) {
     m_playing.emplace(path, decoder);
 }
 
-void oo::controller::stop(oo::device &device, const std::string &path) {
+void oo::player::stop(oo::device &device, const std::string &path) {
     if (path.empty()) {
         if (!device.is_stopped()) {
             device.stop();
@@ -131,7 +131,7 @@ void oo::controller::stop(oo::device &device, const std::string &path) {
     }
 }
 
-void oo::controller::reset(oo::device &device, const std::string &path) {
+void oo::player::reset(oo::device &device, const std::string &path) {
     const auto &decoder = m_decoders[path];
     decoder->seek(0);
 }

@@ -11,15 +11,15 @@ set(MAW_SRC
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "iOS")
     list(APPEND MAW_SRC
-            maw/controller.mm
+            maw/player.mm
             maw/decoder.cpp)
 elseif (ANDROID)
     list(APPEND MAW_SRC
-            maw/controller.cpp
+            maw/player.cpp
             maw/decoder_android.cpp)
 else ()
     list(APPEND MAW_SRC
-            maw/controller.cpp
+            maw/player.cpp
             maw/decoder.cpp)
 endif ()
 
@@ -42,7 +42,7 @@ set(INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/../include)
 
 set(PUBLIC_HEADERS
         ${INCLUDE_DIR}/maw/a_asset_manager_holder.h
-        ${INCLUDE_DIR}/maw/controller.h)
+        ${INCLUDE_DIR}/maw/player.h)
 
 set_target_properties(maw PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
 

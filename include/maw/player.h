@@ -1,5 +1,5 @@
 //
-//  controller.h
+//  player.h
 //  maw
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 15.08.2021.
@@ -22,12 +22,12 @@ namespace oo {
 
     class device;
 
-    class controller {
+    class player {
     public:
 
-        controller();
+        player();
 
-        ~controller();
+        ~player();
 
     public:
 
@@ -51,7 +51,7 @@ namespace oo {
     private:
 
         std::unique_ptr<std::thread> m_service_thread;
-        oo::blocking_queue<std::pair<controller::command, std::string>> m_queue;
+        oo::blocking_queue<std::pair<player::command, std::string>> m_queue;
 
         std::unordered_map<std::string, std::shared_ptr<oo::decoder>> m_decoders;
         std::unordered_map<std::string, std::shared_ptr<oo::decoder>> m_playing;

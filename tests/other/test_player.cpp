@@ -1,5 +1,5 @@
 //
-//  test_controller.cpp
+//  test_player.cpp
 //  maw
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 16.08.2021.
@@ -8,10 +8,10 @@
 
 #include <iostream>
 
-#include <maw/controller.h>
+#include <maw/player.h>
 
 int main() {
-    oo::controller controller{};
+    oo::player controller{};
 
     std::cout << "initialized...";
     std::getchar();
