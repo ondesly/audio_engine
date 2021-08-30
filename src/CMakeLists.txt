@@ -7,7 +7,6 @@
 #
 
 set(MAW_SRC
-        maw/audio.cpp
         maw/device.cpp)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "iOS")
@@ -42,7 +41,6 @@ target_compile_definitions(maw PRIVATE
 set(INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/../include)
 
 set(PUBLIC_HEADERS
-        ${INCLUDE_DIR}/maw/audio.h
         ${INCLUDE_DIR}/maw/blocking_queue.h
         ${INCLUDE_DIR}/maw/controller.h)
 
