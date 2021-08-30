@@ -41,7 +41,7 @@ target_compile_definitions(maw PRIVATE
 set(INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/../include)
 
 set(PUBLIC_HEADERS
-        ${INCLUDE_DIR}/maw/blocking_queue.h
+        ${INCLUDE_DIR}/maw/a_asset_manager_holder.h
         ${INCLUDE_DIR}/maw/controller.h)
 
 set_target_properties(maw PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
