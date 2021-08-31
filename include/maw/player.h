@@ -9,6 +9,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 #include <string>
 #include <thread>
 #include <unordered_map>
@@ -55,6 +56,7 @@ namespace maw {
 
         std::unordered_map<std::string, std::shared_ptr<maw::decoder>> m_decoders;
         std::unordered_map<std::string, std::shared_ptr<maw::decoder>> m_playing;
+        std::mutex m_playing_mutex;
 
         std::vector<float> m_callback_buf;
 
