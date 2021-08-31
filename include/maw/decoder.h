@@ -13,7 +13,7 @@
 
 #include <miniaudio.h>
 
-namespace oo {
+namespace maw {
 
     class decoder {
     public:

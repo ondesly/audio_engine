@@ -23,8 +23,8 @@ else ()
             maw/decoder.cpp)
 endif ()
 
-add_library(maw STATIC
-        ${MAW_SRC})
+add_library(maw STATIC ${MAW_SRC})
+add_library(maw::maw ALIAS maw)
 
 #
 

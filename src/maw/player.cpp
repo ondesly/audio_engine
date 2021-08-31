@@ -15,34 +15,34 @@
 
 #include "maw/player.h"
 
-oo::player::player() {
+maw::player::player() {
     run_service_thread();
 }
 
-void oo::player::load_async(const std::string &path) {
+void maw::player::load_async(const std::string &path) {
     m_queue.emplace(player::command::load, path);
 }
 
-void oo::player::play_async(const std::string &path) {
+void maw::player::play_async(const std::string &path) {
     m_queue.emplace(player::command::play, path);
 }
 
-void oo::player::stop_async(const std::string &path) {
+void maw::player::stop_async(const std::string &path) {
     m_queue.emplace(player::command::stop, path);
 }
 
-void oo::player::reset_async(const std::string &path) {
+void maw::player::reset_async(const std::string &path) {
     m_queue.emplace(player::command::reset, path);
 }
 
-oo::player::~player() {
+maw::player::~player() {
     m_queue.set_done();
     m_service_thread->join();
 }
 
-void oo::player::run_service_thread() {
+void maw::player::run_service_thread() {
     m_service_thread = std::make_unique<std::thread>([&]() {
-        oo::device device{[this](float *output, uint32_t frame_count, uint32_t channel_count) {
+        maw::device device{[this](float *output, uint32_t frame_count, uint32_t channel_count) {
             device_callback(output, frame_count, channel_count);
         }};
 
@@ -68,7 +68,7 @@ void oo::player::run_service_thread() {
     });
 }
 
-void oo::player::device_callback(float *output, uint32_t frame_count, uint32_t channel_count) {
+void maw::player::device_callback(float *output, uint32_t frame_count, uint32_t channel_count) {
     m_callback_buf.resize(frame_count * channel_count);
     bool end = true;
 
@@ -88,8 +88,8 @@ void oo::player::device_callback(float *output, uint32_t frame_count, uint32_t c
     }
 }
 
-void oo::player::load(oo::device &device, const std::string &path) {
-    const auto decoder = std::make_shared<oo::decoder>();
+void maw::player::load(maw::device &device, const std::string &path) {
+    const auto decoder = std::make_shared<maw::decoder>();
 
     if (!decoder->init(path)) {
         return;
@@ -106,7 +106,7 @@ void oo::player::load(oo::device &device, const std::string &path) {
     m_decoders.emplace(path, decoder);
 }
 
-void oo::player::play(oo::device &device, const std::string &path) {
+void maw::player::play(maw::device &device, const std::string &path) {
     if (!device.is_inited()) {
         return;
     }
@@ -121,7 +121,7 @@ void oo::player::play(oo::device &device, const std::string &path) {
     m_playing.emplace(path, decoder);
 }
 
-void oo::player::stop(oo::device &device, const std::string &path) {
+void maw::player::stop(maw::device &device, const std::string &path) {
     if (path.empty()) {
         if (!device.is_stopped()) {
             device.stop();
@@ -131,7 +131,7 @@ void oo::player::stop(oo::device &device, const std::string &path) {
     }
 }
 
-void oo::player::reset(oo::device &device, const std::string &path) {
+void maw::player::reset(maw::device &device, const std::string &path) {
     const auto &decoder = m_decoders[path];
     decoder->seek(0);
 }

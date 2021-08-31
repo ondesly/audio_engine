@@ -8,17 +8,17 @@
 
 #include "maw/decoder.h"
 
-oo::decoder::decoder() = default;
+maw::decoder::decoder() = default;
 
-oo::decoder::~decoder() {
+maw::decoder::~decoder() {
     ma_decoder_uninit(&m_decoder);
 }
 
-bool oo::decoder::init(const std::string &path) {
+bool maw::decoder::init(const std::string &path) {
     return ma_decoder_init_file(path.c_str(), nullptr, &m_decoder) == MA_SUCCESS;
 }
 
-ma_uint64 oo::decoder::read(float *output, float *buf, ma_uint64 frame_count, ma_uint64 channel_count) {
+ma_uint64 maw::decoder::read(float *output, float *buf, ma_uint64 frame_count, ma_uint64 channel_count) {
     const auto read = ma_decoder_read_pcm_frames(&m_decoder, buf, frame_count);
     for (size_t i = 0; i < read * channel_count; ++i) {
         output[i] += buf[i];
@@ -26,18 +26,18 @@ ma_uint64 oo::decoder::read(float *output, float *buf, ma_uint64 frame_count, ma
     return read;
 }
 
-bool oo::decoder::seek(ma_uint64 frame) {
+bool maw::decoder::seek(ma_uint64 frame) {
     return ma_decoder_seek_to_pcm_frame(&m_decoder, frame) == MA_SUCCESS;
 }
 
-ma_format oo::decoder::get_output_format() const {
+ma_format maw::decoder::get_output_format() const {
     return m_decoder.outputFormat;
 }
 
-ma_uint32 oo::decoder::get_output_channels() const {
+ma_uint32 maw::decoder::get_output_channels() const {
     return m_decoder.outputChannels;
 }
 
-ma_uint32 oo::decoder::get_output_sample_rate() const {
+ma_uint32 maw::decoder::get_output_sample_rate() const {
     return m_decoder.outputSampleRate;
 }

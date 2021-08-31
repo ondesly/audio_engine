@@ -13,7 +13,7 @@ project(tests)
 function(add name)
     add_executable(${name} ${name}.cpp)
 
-    target_link_libraries(${name} maw)
+    target_link_libraries(${name} maw::maw)
 
     set_target_properties(${name} PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 

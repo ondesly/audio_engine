@@ -11,7 +11,7 @@
 #include <maw/player.h>
 
 int main() {
-    oo::player controller{};
+    maw::player controller{};
 
     std::cout << "initialized...";
     std::getchar();

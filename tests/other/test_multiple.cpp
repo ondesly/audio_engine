@@ -20,7 +20,7 @@ int main() {
             "sample4.mp3"
     };
 
-    oo::player player{};
+    maw::player player{};
     for (const auto &path: paths) {
         player.load_async(path);
     }

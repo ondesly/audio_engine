@@ -15,22 +15,22 @@ namespace {
     void data_callback(ma_device *device, void *output, const void *, ma_uint32 frame_count) {
         auto output_f32 = static_cast<float *>(output);
         const auto channel_count = device->playback.channels;
-        const auto &callback = *static_cast<oo::callback *>(device->pUserData);
+        const auto &callback = *static_cast<maw::callback *>(device->pUserData);
 
         callback(output_f32, frame_count, channel_count);
     }
 
 }
 
-oo::device::device(oo::callback callback) : m_callback(std::move(callback)) {
+maw::device::device(maw::callback callback) : m_callback(std::move(callback)) {
 
 }
 
-oo::device::~device() {
+maw::device::~device() {
     ma_device_uninit(&m_device);
 }
 
-bool oo::device::init(ma_format format, ma_uint32 channels, ma_uint32 sample_rate) {
+bool maw::device::init(ma_format format, ma_uint32 channels, ma_uint32 sample_rate) {
     ma_device_config device_config;
     device_config = ma_device_config_init(ma_device_type_playback);
     device_config.playback.format = format;
@@ -42,22 +42,22 @@ bool oo::device::init(ma_format format, ma_uint32 channels, ma_uint32 sample_rat
     return ma_device_init(nullptr, &device_config, &m_device) == MA_SUCCESS;
 }
 
-bool oo::device::is_inited() const {
+bool maw::device::is_inited() const {
     return m_device.state != 0;
 }
 
-bool oo::device::start() {
+bool maw::device::start() {
     return ma_device_start(&m_device) == MA_SUCCESS;
 }
 
-bool oo::device::is_started() const {
+bool maw::device::is_started() const {
     return m_device.state == 2;
 }
 
-bool oo::device::stop() {
+bool maw::device::stop() {
     return ma_device_stop(&m_device) == MA_SUCCESS;
 }
 
-bool oo::device::is_stopped() const {
+bool maw::device::is_stopped() const {
     return m_device.state == 1;
 }

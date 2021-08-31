@@ -12,14 +12,14 @@
 
 #include <miniaudio.h>
 
-namespace oo {
+namespace maw {
 
     using callback = std::function<void(float *output, ma_uint32 frame_count, ma_uint32 channel_count)>;
 
     class device {
     public:
 
-        explicit device(oo::callback callback);
+        explicit device(maw::callback callback);
 
         ~device();
 
@@ -39,7 +39,7 @@ namespace oo {
 
     private:
 
-        oo::callback m_callback;
+        maw::callback m_callback;
         ma_device m_device = {};
 
     };

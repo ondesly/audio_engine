@@ -16,7 +16,7 @@
 
 #include <blocking_queue/blocking_queue.h>
 
-namespace oo {
+namespace maw {
 
     class decoder;
 
@@ -51,10 +51,10 @@ namespace oo {
     private:
 
         std::unique_ptr<std::thread> m_service_thread;
-        oo::blocking_queue<std::pair<player::command, std::string>> m_queue;
+        maw::blocking_queue<std::pair<player::command, std::string>> m_queue;
 
-        std::unordered_map<std::string, std::shared_ptr<oo::decoder>> m_decoders;
-        std::unordered_map<std::string, std::shared_ptr<oo::decoder>> m_playing;
+        std::unordered_map<std::string, std::shared_ptr<maw::decoder>> m_decoders;
+        std::unordered_map<std::string, std::shared_ptr<maw::decoder>> m_playing;
 
         std::vector<float> m_callback_buf;
 
@@ -64,13 +64,13 @@ namespace oo {
 
         void device_callback(float *output, uint32_t frame_count, uint32_t channel_count);
 
-        void load(oo::device &device, const std::string &path);
+        void load(maw::device &device, const std::string &path);
 
-        void play(oo::device &device, const std::string &path);
+        void play(maw::device &device, const std::string &path);
 
-        void stop(oo::device &device, const std::string &path);
+        void stop(maw::device &device, const std::string &path);
 
-        void reset(oo::device &device, const std::string &path);
+        void reset(maw::device &device, const std::string &path);
 
     };
 

@@ -10,7 +10,7 @@
 
 typedef struct AAssetManager AAssetManager;
 
-namespace oo {
+namespace maw {
 
     class a_asset_manager_holder {
     public:
