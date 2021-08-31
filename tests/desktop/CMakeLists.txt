@@ -29,3 +29,4 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/../res/sample4.mp3 DESTINATION ${CMAKE_CURRE
 
 add("test_player")
 add("test_multiple")
+add("test_preload_release")
