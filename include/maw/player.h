@@ -51,7 +51,7 @@ namespace maw {
     private:
 
         std::unique_ptr<std::thread> m_service_thread;
-        maw::blocking_queue<std::pair<player::command, std::string>> m_queue;
+        oo::blocking_queue<std::pair<player::command, std::string>> m_queue;
 
         std::unordered_map<std::string, std::shared_ptr<maw::decoder>> m_decoders;
         std::unordered_map<std::string, std::shared_ptr<maw::decoder>> m_playing;
