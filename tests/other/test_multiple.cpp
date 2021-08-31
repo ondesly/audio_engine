@@ -22,16 +22,16 @@ int main() {
 
     maw::player player{};
     for (const auto &path: paths) {
-        player.load_async(path);
+        player.load(path);
     }
 
     srand(time(nullptr)); // NOLINT(cert-msc51-cpp)
     std::thread t([&]() {
         for (size_t i = 0; i < 100; ++i) {
             if (rand() % 3 == 0) { // NOLINT(cert-msc50-cpp)
-                player.stop_async(paths[rand() % 4]); // NOLINT(cert-msc50-cpp)
+                player.stop(paths[rand() % 4]); // NOLINT(cert-msc50-cpp)
             } else {
-                player.play_async(paths[rand() % 4]); // NOLINT(cert-msc50-cpp)
+                player.play(paths[rand() % 4]); // NOLINT(cert-msc50-cpp)
             }
             using namespace std::chrono_literals;
             std::this_thread::sleep_for(300ms);

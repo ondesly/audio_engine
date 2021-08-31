@@ -19,19 +19,19 @@ maw::player::player() {
     run_service_thread();
 }
 
-void maw::player::load_async(const std::string &path) {
+void maw::player::load(const std::string &path) {
     m_queue.emplace(player::command::load, path);
 }
 
-void maw::player::play_async(const std::string &path) {
+void maw::player::play(const std::string &path) {
     m_queue.emplace(player::command::play, path);
 }
 
-void maw::player::stop_async(const std::string &path) {
+void maw::player::stop(const std::string &path) {
     m_queue.emplace(player::command::stop, path);
 }
 
-void maw::player::reset_async(const std::string &path) {
+void maw::player::reset(const std::string &path) {
     m_queue.emplace(player::command::reset, path);
 }
 
@@ -76,15 +76,15 @@ void maw::player::device_callback(float *output, uint32_t frame_count, uint32_t 
         const auto read = decoder->read(output, m_callback_buf.data(), frame_count, channel_count);
 
         if (read < frame_count) {
-            stop_async(path);
-            reset_async(path);
+            stop(path);
+            reset(path);
         } else {
             end = false;
         }
     }
 
     if (end) {
-        stop_async();
+        stop();
     }
 }
 

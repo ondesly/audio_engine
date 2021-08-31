@@ -31,13 +31,13 @@ namespace maw {
 
     public:
 
-        void load_async(const std::string &path);
+        void load(const std::string &path);
 
-        void play_async(const std::string &path);
+        void play(const std::string &path);
 
-        void stop_async(const std::string &path = "");
+        void stop(const std::string &path = "");
 
-        void reset_async(const std::string &path);
+        void reset(const std::string &path);
 
     private:
 

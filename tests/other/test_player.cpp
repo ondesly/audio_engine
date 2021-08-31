@@ -16,17 +16,17 @@ int main() {
     std::cout << "initialized...";
     std::getchar();
 
-    controller.load_async("sample.mp3");
+    controller.load("sample.mp3");
 
     std::cout << "loaded...";
     std::getchar();
 
-    controller.play_async("sample.mp3");
+    controller.play("sample.mp3");
 
     std::cout << "playing...";
     std::getchar();
 
-    controller.stop_async("sample.mp3");
+    controller.stop("sample.mp3");
 
     std::cout << "stopped...";
     std::getchar();
