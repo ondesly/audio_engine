@@ -32,7 +32,9 @@ namespace maw {
 
     public:
 
-        void load(const std::string &path);
+        void preload(const std::string &path);
+
+        void release(const std::string &path);
 
         void play(const std::string &path);
 
@@ -43,7 +45,8 @@ namespace maw {
     private:
 
         enum class command {
-            load,
+            preload,
+            release,
             play,
             stop,
             reset
@@ -66,7 +69,9 @@ namespace maw {
 
         void device_callback(float *output, uint32_t frame_count, uint32_t channel_count);
 
-        void load(maw::device &device, const std::string &path);
+        void preload(maw::device &device, const std::string &path);
+
+        void release(maw::device &device, const std::string &path);
 
         void play(maw::device &device, const std::string &path);
 

@@ -19,8 +19,12 @@ maw::player::player() {
     run_service_thread();
 }
 
-void maw::player::load(const std::string &path) {
-    m_queue.emplace(player::command::load, path);
+void maw::player::preload(const std::string &path) {
+    m_queue.emplace(player::command::preload, path);
+}
+
+void maw::player::release(const std::string &path) {
+    m_queue.emplace(player::command::release, path);
 }
 
 void maw::player::play(const std::string &path) {
@@ -51,8 +55,11 @@ void maw::player::run_service_thread() {
             const auto &path = command.second;
 
             switch (command.first) {
-                case command::load:
-                    load(device, path);
+                case command::preload:
+                    preload(device, path);
+                    break;
+                case command::release:
+                    release(device, path);
                     break;
                 case command::play:
                     play(device, path);
@@ -90,7 +97,7 @@ void maw::player::device_callback(float *output, uint32_t frame_count, uint32_t 
     }
 }
 
-void maw::player::load(maw::device &device, const std::string &path) {
+void maw::player::preload(maw::device &device, const std::string &path) {
     const auto decoder = std::make_shared<maw::decoder>();
 
     if (!decoder->init(path)) {
@@ -106,6 +113,13 @@ void maw::player::load(maw::device &device, const std::string &path) {
     }
 
     m_decoders.emplace(path, decoder);
+}
+
+void maw::player::release(maw::device &device, const std::string &path) {
+    std::lock_guard<std::mutex> lock(m_playing_mutex);
+
+    m_playing.erase(path);
+    m_decoders.erase(path);
 }
 
 void maw::player::play(maw::device &device, const std::string &path) {

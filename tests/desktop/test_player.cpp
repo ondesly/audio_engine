@@ -16,9 +16,9 @@ int main() {
     std::cout << "initialized...";
     std::getchar();
 
-    controller.load("sample.mp3");
+    controller.preload("sample.mp3");
 
-    std::cout << "loaded...";
+    std::cout << "preloaded...";
     std::getchar();
 
     controller.play("sample.mp3");
