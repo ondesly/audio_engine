@@ -6,9 +6,17 @@
 //  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
 //
 
-#include "maw/audio.h"
+#include <memory>
+
+#include <maw/player.h>
 
 #import "ViewController.h"
+
+namespace {
+
+    std::unique_ptr<maw::player> s_player;
+
+}
 
 @interface ViewController ()
 
@@ -20,13 +28,16 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 
+    if (!s_player) {
+        s_player = std::make_unique<maw::player>();
+    }
+    
     NSBundle* bundle = [NSBundle mainBundle];
     NSString* nsPath = [bundle pathForResource:@"sample" ofType:@"mp3"];
     std::string path = [nsPath UTF8String];
     
-    oo::audio audio{};
-    audio.load(path);
-    audio.play(path);
+    s_player->load(path);
+    s_player->play(path);
 }
 
 @end
