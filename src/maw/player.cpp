@@ -123,6 +123,10 @@ void maw::player::release(maw::device &device, const std::string &path) {
 }
 
 void maw::player::play(maw::device &device, const std::string &path) {
+    if (m_decoders.find(path) == m_decoders.end()) {
+        preload(device, path);
+    }
+
     if (!device.is_inited()) {
         return;
     }

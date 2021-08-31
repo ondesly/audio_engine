@@ -21,9 +21,6 @@ int main() {
     };
 
     maw::player player{};
-    for (const auto &path: paths) {
-        player.load(path);
-    }
 
     srand(time(nullptr)); // NOLINT(cert-msc51-cpp)
     std::thread t([&]() {

@@ -46,7 +46,6 @@ Java_com_github_ondesly_maw_test_MainActivity_play(
 
     const auto path = to_string(env, j_path);
 
-    s_player->preload(path);
     s_player->play(path);
 }
 

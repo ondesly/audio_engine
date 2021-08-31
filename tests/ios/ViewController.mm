@@ -36,7 +36,6 @@ namespace {
     NSString* nsPath = [bundle pathForResource:@"sample" ofType:@"mp3"];
     std::string path = [nsPath UTF8String];
     
-    s_player->preload(path);
     s_player->play(path);
 }
 
