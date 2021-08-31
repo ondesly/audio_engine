@@ -7,7 +7,3 @@
 #
 
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE)
-
-if (${CMAKE_SYSTEM_NAME} MATCHES "iOS")
-    set(IOS TRUE)
-endif ()

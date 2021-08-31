@@ -12,6 +12,12 @@ project(maw
         VERSION 0.1.0
         LANGUAGES C CXX)
 
+#
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "iOS")
+    set(IOS TRUE)
+endif ()
+
 ###########
 # Options #
 ###########

@@ -6,7 +6,7 @@
 #  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
 #
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "iOS")
+if (IOS)
     add_subdirectory(ios)
 elseif (ANDROID)
     add_subdirectory(android)

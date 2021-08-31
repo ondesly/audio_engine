@@ -9,7 +9,7 @@
 set(MAW_SRC
         maw/device.cpp)
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "iOS")
+if (IOS)
     list(APPEND MAW_SRC
             maw/player.mm
             maw/decoder.cpp)
