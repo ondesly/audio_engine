@@ -31,6 +31,11 @@ maw::device::~device() {
 }
 
 bool maw::device::init(ma_format format, ma_uint32 channels, ma_uint32 sample_rate) {
+    ma_context_config context_config = ma_context_config_init();
+    context_config.coreaudio.sessionCategory = ma_ios_session_category_ambient;
+    context_config.coreaudio.sessionCategoryOptions = ma_ios_session_category_option_mix_with_others;
+    ma_context_init(nullptr, 0, &context_config, &m_context);
+
     ma_device_config device_config;
     device_config = ma_device_config_init(ma_device_type_playback);
     device_config.playback.format = format;
@@ -39,7 +44,7 @@ bool maw::device::init(ma_format format, ma_uint32 channels, ma_uint32 sample_ra
     device_config.pUserData = &m_callback;
     device_config.dataCallback = data_callback;
 
-    return ma_device_init(nullptr, &device_config, &m_device) == MA_SUCCESS;
+    return ma_device_init(&m_context, &device_config, &m_device) == MA_SUCCESS;
 }
 
 bool maw::device::is_inited() const {

@@ -40,6 +40,8 @@ namespace maw {
     private:
 
         maw::callback m_callback;
+
+        ma_context m_context = {};
         ma_device m_device = {};
 
     };
