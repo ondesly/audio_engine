@@ -28,6 +28,7 @@ maw::device::device(maw::callback callback) : m_callback(std::move(callback)) {
 
 maw::device::~device() {
     ma_device_uninit(&m_device);
+    ma_context_uninit(&m_context);
 }
 
 bool maw::device::init(ma_format format, ma_uint32 channels, ma_uint32 sample_rate) {
