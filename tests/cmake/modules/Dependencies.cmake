@@ -18,6 +18,7 @@ function(target_link_system_libraries target)
                 ${AUDIO_TOOLBOX_LIBRARY})
     elseif (ANDROID)
         target_link_libraries(${target} PRIVATE
-                android)
+                android
+                log)
     endif ()
 endfunction()

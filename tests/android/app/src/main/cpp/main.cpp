@@ -7,12 +7,15 @@
 //
 
 #include <android/asset_manager_jni.h>
+#include <iostream>
 #include <jni.h>
 #include <memory>
 #include <string>
 
 #include <maw/a_asset_manager_holder.h>
 #include <maw/player.h>
+
+#include "log_buffer.h"
 
 namespace {
 
@@ -53,6 +56,8 @@ JNIEXPORT void JNICALL
 Java_com_github_ondesly_maw_test_MainActivity_setAssetManager(JNIEnv *env,
                                                               jobject /* this */,
                                                               jobject j_asset_manager) {
+    std::cout.rdbuf(new cc::log_buffer);
+
     maw::a_asset_manager_holder holder{};
     holder.set(AAssetManager_fromJava(env, j_asset_manager));
 }
