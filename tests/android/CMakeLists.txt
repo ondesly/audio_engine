@@ -23,7 +23,11 @@ include(Dependencies)
 set(SRC_SOURCE)
 
 list(APPEND SRC_SOURCE
-        app/src/main/cpp/main.cpp)
+        app/src/main/cpp/a_audio_test.cpp
+        app/src/main/cpp/log_buffer.cpp
+        app/src/main/cpp/main.cpp
+        app/src/main/cpp/miniaudio_async_test.cpp
+        app/src/main/cpp/miniaudio_test.cpp)
 
 #
 
@@ -31,7 +35,7 @@ add_library(${TEST_NAME} SHARED ${SRC_SOURCE})
 
 target_link_system_libraries(${TEST_NAME})
 target_link_libraries(${TEST_NAME} PRIVATE
-        maw)
+        maw miniaudio)
 
 #
 
@@ -46,4 +50,4 @@ target_compile_definitions(${TEST_NAME} PUBLIC $<$<CONFIG:Debug>:DEBUG=1>)
 
 #
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/../res/sample.mp3 DESTINATION ${CMAKE_CURRENT_LIST_DIR}/app/src/main/assets)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/../res/sample4.mp3 DESTINATION ${CMAKE_CURRENT_LIST_DIR}/app/src/main/assets)

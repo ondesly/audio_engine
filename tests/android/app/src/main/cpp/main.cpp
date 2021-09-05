@@ -15,7 +15,10 @@
 #include <maw/a_asset_manager_holder.h>
 #include <maw/player.h>
 
+#include "a_audio_test.h"
 #include "log_buffer.h"
+#include "miniaudio_async_test.h"
+#include "miniaudio_test.h"
 
 namespace {
 
@@ -33,10 +36,25 @@ namespace {
     }
 
     std::unique_ptr<maw::player> s_player;
+    std::unique_ptr<maw::a_audio_test> s_audio_test;
+    std::unique_ptr<maw::miniaudio_test> s_mini_test;
+    std::unique_ptr<maw::miniaudio_async_test> s_async_test;
 
 }
 
 extern "C" {
+
+JNIEXPORT void JNICALL
+Java_com_github_ondesly_maw_test_MainActivity_setAssetManager(JNIEnv *env,
+                                                              jobject /* this */,
+                                                              jobject j_asset_manager) {
+    std::cout.rdbuf(new cc::log_buffer);
+
+    maw::a_asset_manager_holder holder{};
+    holder.set(AAssetManager_fromJava(env, j_asset_manager));
+}
+
+// MAW
 
 JNIEXPORT void JNICALL
 Java_com_github_ondesly_maw_test_MainActivity_play(
@@ -53,13 +71,121 @@ Java_com_github_ondesly_maw_test_MainActivity_play(
 }
 
 JNIEXPORT void JNICALL
-Java_com_github_ondesly_maw_test_MainActivity_setAssetManager(JNIEnv *env,
-                                                              jobject /* this */,
-                                                              jobject j_asset_manager) {
-    std::cout.rdbuf(new cc::log_buffer);
+Java_com_github_ondesly_maw_test_MainActivity_stop(
+        JNIEnv *env,
+        jobject /* this */,
+        jstring j_path) {
+    if (!s_player) {
+        s_player = std::make_unique<maw::player>();
+    }
 
-    maw::a_asset_manager_holder holder{};
-    holder.set(AAssetManager_fromJava(env, j_asset_manager));
+    const auto path = to_string(env, j_path);
+
+    s_player->stop(path);
+}
+
+JNIEXPORT void JNICALL
+Java_com_github_ondesly_maw_test_MainActivity_stopAll(
+        JNIEnv *env,
+        jobject /* this */) {
+    s_player->stop();
+}
+
+JNIEXPORT void JNICALL
+Java_com_github_ondesly_maw_test_MainActivity_term(
+        JNIEnv *env,
+        jobject /* this */) {
+    s_player = nullptr;
+}
+
+// AAudio
+
+JNIEXPORT void JNICALL
+Java_com_github_ondesly_maw_test_MainActivity_aaOpen(
+        JNIEnv *env,
+        jobject /* this */) {
+    s_audio_test = std::make_unique<maw::a_audio_test>();
+}
+
+JNIEXPORT void JNICALL
+Java_com_github_ondesly_maw_test_MainActivity_aaStart(
+        JNIEnv *env,
+        jobject /* this */) {
+    s_audio_test->start();
+}
+
+JNIEXPORT void JNICALL
+Java_com_github_ondesly_maw_test_MainActivity_aaStop(
+        JNIEnv *env,
+        jobject /* this */) {
+    s_audio_test->stop();
+}
+
+JNIEXPORT void JNICALL
+Java_com_github_ondesly_maw_test_MainActivity_aaClose(
+        JNIEnv *env,
+        jobject /* this */) {
+    s_audio_test = nullptr;
+}
+
+// Miniaudio
+
+JNIEXPORT void JNICALL
+Java_com_github_ondesly_maw_test_MainActivity_miniInit(
+        JNIEnv *env,
+        jobject /* this */) {
+    s_mini_test = std::make_unique<maw::miniaudio_test>();
+}
+
+JNIEXPORT void JNICALL
+Java_com_github_ondesly_maw_test_MainActivity_miniStart(
+        JNIEnv *env,
+        jobject /* this */) {
+    s_mini_test->start();
+}
+
+JNIEXPORT void JNICALL
+Java_com_github_ondesly_maw_test_MainActivity_miniStop(
+        JNIEnv *env,
+        jobject /* this */) {
+    s_mini_test->stop();
+}
+
+JNIEXPORT void JNICALL
+Java_com_github_ondesly_maw_test_MainActivity_miniUninit(
+        JNIEnv *env,
+        jobject /* this */) {
+    s_mini_test = nullptr;
+}
+
+// Miniaudio Async
+
+JNIEXPORT void JNICALL
+Java_com_github_ondesly_maw_test_MainActivity_asyncInit(
+        JNIEnv *env,
+        jobject /* this */) {
+    s_async_test = std::make_unique<maw::miniaudio_async_test>();
+}
+
+JNIEXPORT void JNICALL
+Java_com_github_ondesly_maw_test_MainActivity_asyncStart(
+        JNIEnv *env,
+        jobject /* this */) {
+    s_async_test->start();
+}
+
+JNIEXPORT void JNICALL
+Java_com_github_ondesly_maw_test_MainActivity_asyncStop(
+        JNIEnv *env,
+        jobject /* this */) {
+    s_async_test->stop();
+}
+
+JNIEXPORT void JNICALL
+Java_com_github_ondesly_maw_test_MainActivity_asyncUninit(
+        JNIEnv *env,
+        jobject /* this */) {
+    s_async_test = nullptr;
 }
 
 }
