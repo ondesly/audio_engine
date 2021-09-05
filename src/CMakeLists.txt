@@ -41,6 +41,8 @@ target_compile_definitions(maw PRIVATE
 set(INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/../include)
 
 set(PUBLIC_HEADERS
+        ${INCLUDE_DIR}/concurrent/lockfree_set.h
+        ${INCLUDE_DIR}/concurrent/spinlock.h
         ${INCLUDE_DIR}/maw/a_asset_manager_holder.h
         ${INCLUDE_DIR}/maw/player.h)
 

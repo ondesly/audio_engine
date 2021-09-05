@@ -18,13 +18,15 @@ namespace maw {
     class decoder {
     public:
 
-        decoder();
+        explicit decoder(std::string path);
 
         ~decoder();
 
     public:
 
-        bool init(const std::string &path);
+        [[nodiscard]] std::string get_path() const;
+
+        bool init();
 
         ma_uint64 read(float *output, float *buf, ma_uint64 frame_count, ma_uint64 channel_count);
 
@@ -38,6 +40,7 @@ namespace maw {
 
     private:
 
+        const std::string m_path;
         ma_decoder m_decoder = {};
 
     };

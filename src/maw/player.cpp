@@ -79,12 +79,13 @@ void maw::player::device_callback(float *output, uint32_t frame_count, uint32_t 
     m_callback_buf.resize(frame_count * channel_count);
     bool end = true;
 
-    std::lock_guard<std::mutex> lock(m_playing_mutex);
-
-    for (const auto &[path, decoder]: m_playing) {
+    m_playing.sync();
+    for (const auto &decoder: m_playing) {
         const auto read = decoder->read(output, m_callback_buf.data(), frame_count, channel_count);
 
         if (read < frame_count) {
+            const auto &path = decoder->get_path();
+
             stop(path);
             reset(path);
         } else {
@@ -98,9 +99,9 @@ void maw::player::device_callback(float *output, uint32_t frame_count, uint32_t 
 }
 
 void maw::player::preload(maw::device &device, const std::string &path) {
-    const auto decoder = std::make_shared<maw::decoder>();
+    const auto decoder = std::make_shared<maw::decoder>(path);
 
-    if (!decoder->init(path)) {
+    if (!decoder->init()) {
         return;
     }
 
@@ -116,9 +117,9 @@ void maw::player::preload(maw::device &device, const std::string &path) {
 }
 
 void maw::player::release(maw::device &device, const std::string &path) {
-    std::lock_guard<std::mutex> lock(m_playing_mutex);
+    const auto &decoder = m_decoders[path];
+    m_playing.erase(decoder);
 
-    m_playing.erase(path);
     m_decoders.erase(path);
 }
 
@@ -131,16 +132,18 @@ void maw::player::play(maw::device &device, const std::string &path) {
         return;
     }
 
-    std::lock_guard<std::mutex> lock(m_playing_mutex);
+    //
+
+    const auto &decoder = m_decoders[path];
+    m_playing.insert(decoder);
+
+    //
 
     if (!device.is_started()) {
         if (!device.start()) {
             return;
         }
     }
-
-    const auto &decoder = m_decoders[path];
-    m_playing.emplace(path, decoder);
 }
 
 void maw::player::stop(maw::device &device, const std::string &path) {
@@ -149,9 +152,8 @@ void maw::player::stop(maw::device &device, const std::string &path) {
             device.stop();
         }
     } else {
-        std::lock_guard<std::mutex> lock(m_playing_mutex);
-
-        m_playing.erase(path);
+        const auto &decoder = m_decoders[path];
+        m_playing.erase(decoder);
     }
 }
 

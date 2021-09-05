@@ -17,6 +17,8 @@
 
 #include <blocking_queue/blocking_queue.h>
 
+#include "concurrent/lockfree_set.h"
+
 namespace maw {
 
     class decoder;
@@ -58,8 +60,7 @@ namespace maw {
         oo::blocking_queue<std::pair<player::command, std::string>> m_queue;
 
         std::unordered_map<std::string, std::shared_ptr<maw::decoder>> m_decoders;
-        std::unordered_map<std::string, std::shared_ptr<maw::decoder>> m_playing;
-        std::mutex m_playing_mutex;
+        oo::lockfree_set<std::shared_ptr<maw::decoder>> m_playing;
 
         std::vector<float> m_callback_buf;
 

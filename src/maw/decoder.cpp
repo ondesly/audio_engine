@@ -8,14 +8,22 @@
 
 #include "maw/decoder.h"
 
-maw::decoder::decoder() = default;
+#include <utility>
+
+maw::decoder::decoder(std::string path) : m_path(std::move(path)) {
+
+}
 
 maw::decoder::~decoder() {
     ma_decoder_uninit(&m_decoder);
 }
 
-bool maw::decoder::init(const std::string &path) {
-    return ma_decoder_init_file(path.c_str(), nullptr, &m_decoder) == MA_SUCCESS;
+std::string maw::decoder::get_path() const {
+    return m_path;
+}
+
+bool maw::decoder::init() {
+    return ma_decoder_init_file(m_path.c_str(), nullptr, &m_decoder) == MA_SUCCESS;
 }
 
 ma_uint64 maw::decoder::read(float *output, float *buf, ma_uint64 frame_count, ma_uint64 channel_count) {

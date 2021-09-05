@@ -90,7 +90,7 @@ namespace {
 
 }
 
-maw::decoder::decoder() {
+maw::decoder::decoder(std::string path) : m_path(std::move(path)) {
     a_asset_manager_holder holder{};
     s_asset_manager = holder.get();
 }
@@ -99,8 +99,12 @@ maw::decoder::~decoder() {
     ma_decoder_uninit(&m_decoder);
 }
 
-bool maw::decoder::init(const std::string &path) {
-    return ma_decoder_init_vfs(&s_vfs, path.c_str(), nullptr, &m_decoder) == MA_SUCCESS;
+std::string maw::decoder::get_path() const {
+    return m_path;
+}
+
+bool maw::decoder::init() {
+    return ma_decoder_init_vfs(&s_vfs, m_path.c_str(), nullptr, &m_decoder) == MA_SUCCESS;
 }
 
 ma_uint64 maw::decoder::read(float *output, float *buf, ma_uint64 frame_count, ma_uint64 channel_count) {
