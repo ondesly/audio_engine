@@ -18,8 +18,6 @@
 
 #include <lockfree_container/lockfree_container.h>
 
-#include "concurrent/lockfree_set.h"
-
 namespace maw {
 
     class decoder;
@@ -65,7 +63,7 @@ namespace maw {
         oo::lockfree_container<std::pair<player::command, std::string>> m_queue;
 
         std::unordered_map<std::string, std::shared_ptr<maw::decoder>> m_decoders;
-        oo::lockfree_set<std::shared_ptr<maw::decoder>> m_playing;
+        oo::lockfree_container<std::shared_ptr<maw::decoder>> m_playing;
 
         std::vector<float> m_callback_buf;
 

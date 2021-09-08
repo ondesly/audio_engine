@@ -82,7 +82,6 @@ void maw::player::device_callback(float *output, uint32_t frame_count, uint32_t 
     m_callback_buf.resize(frame_count * channel_count);
     bool end = true;
 
-    m_playing.sync();
     for (const auto &decoder: m_playing) {
         const auto read = decoder->read(output, m_callback_buf.data(), frame_count, channel_count);
 
