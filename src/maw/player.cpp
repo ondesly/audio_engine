@@ -40,7 +40,13 @@ void maw::player::reset(const std::string &path) {
 }
 
 maw::player::~player() {
-    m_is_done = true;
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+
+        m_is_done = true;
+        m_condition.notify_all();
+    }
+
     m_service_thread->join();
 }
 
@@ -55,31 +61,20 @@ void maw::player::run_service_thread() {
             device_callback(output, frame_count, channel_count);
         }};
 
-        do {
-            std::pair<player::command, std::string> command;
-            while (m_queue.pop(command)) {
-                switch (command.first) {
-                    case command::preload:
-                        preload(device, command.second);
-                        break;
-                    case command::release:
-                        release(device, command.second);
-                        break;
-                    case command::play:
-                        play(device, command.second);
-                        break;
-                    case command::stop:
-                        stop(device, command.second);
-                        break;
-                    case command::reset:
-                        reset(device, command.second);
-                        break;
+        std::pair<player::command, std::string> command;
+        while (true) {
+            if (m_queue.pop(command)) {
+                process_command(device, command.first, command.second);
+            } else {
+                std::unique_lock<std::mutex> lock(m_mutex);
+                if (m_is_done) {
+                    break;
+                } else {
+                    using namespace std::chrono_literals;
+                    m_condition.wait_for(lock, 100ms);
                 }
             }
-
-            std::unique_lock<std::mutex> lock(m_mutex);
-            m_condition.wait(lock);
-        } while (!m_is_done);
+        }
     });
 }
 
@@ -103,6 +98,26 @@ void maw::player::device_callback(float *output, uint32_t frame_count, uint32_t 
 
     if (end) {
         stop();
+    }
+}
+
+void maw::player::process_command(maw::device &device, player::command command, const std::string &path) {
+    switch (command) {
+        case command::preload:
+            preload(device, path);
+            break;
+        case command::release:
+            release(device, path);
+            break;
+        case command::play:
+            play(device, path);
+            break;
+        case command::stop:
+            stop(device, path);
+            break;
+        case command::reset:
+            reset(device, path);
+            break;
     }
 }
 

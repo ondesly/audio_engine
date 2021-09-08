@@ -77,6 +77,8 @@ namespace maw {
 
         void device_callback(float *output, uint32_t frame_count, uint32_t channel_count);
 
+        void process_command(maw::device &device, player::command command, const std::string &path);
+
         void preload(maw::device &device, const std::string &path);
 
         void release(maw::device &device, const std::string &path);
