@@ -20,28 +20,33 @@ maw::player::player() {
 }
 
 void maw::player::preload(const std::string &path) {
-    m_queue.emplace(player::command::preload, path);
+    queue_command(player::command::preload, path);
 }
 
 void maw::player::release(const std::string &path) {
-    m_queue.emplace(player::command::release, path);
+    queue_command(player::command::release, path);
 }
 
 void maw::player::play(const std::string &path) {
-    m_queue.emplace(player::command::play, path);
+    queue_command(player::command::play, path);
 }
 
 void maw::player::stop(const std::string &path) {
-    m_queue.emplace(player::command::stop, path);
+    queue_command(player::command::stop, path);
 }
 
 void maw::player::reset(const std::string &path) {
-    m_queue.emplace(player::command::reset, path);
+    queue_command(player::command::reset, path);
 }
 
 maw::player::~player() {
-    m_queue.set_done();
+    m_is_done = true;
     m_service_thread->join();
+}
+
+void maw::player::queue_command(maw::player::command command, const std::string &path) {
+    m_queue.push({command, path});
+    m_condition.notify_one();
 }
 
 void maw::player::run_service_thread() {
@@ -50,28 +55,31 @@ void maw::player::run_service_thread() {
             device_callback(output, frame_count, channel_count);
         }};
 
-        while (!m_queue.is_done()) {
-            const auto command = m_queue.pop();
-            const auto &path = command.second;
-
-            switch (command.first) {
-                case command::preload:
-                    preload(device, path);
-                    break;
-                case command::release:
-                    release(device, path);
-                    break;
-                case command::play:
-                    play(device, path);
-                    break;
-                case command::stop:
-                    stop(device, path);
-                    break;
-                case command::reset:
-                    reset(device, path);
-                    break;
+        do {
+            std::pair<player::command, std::string> command;
+            while (m_queue.pop(command)) {
+                switch (command.first) {
+                    case command::preload:
+                        preload(device, command.second);
+                        break;
+                    case command::release:
+                        release(device, command.second);
+                        break;
+                    case command::play:
+                        play(device, command.second);
+                        break;
+                    case command::stop:
+                        stop(device, command.second);
+                        break;
+                    case command::reset:
+                        reset(device, command.second);
+                        break;
+                }
             }
-        }
+
+            std::unique_lock<std::mutex> lock(m_mutex);
+            m_condition.wait(lock);
+        } while (!m_is_done);
     });
 }
 

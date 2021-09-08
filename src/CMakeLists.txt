@@ -29,7 +29,7 @@ add_library(maw::maw ALIAS maw)
 #
 
 target_link_libraries(maw PRIVATE miniaudio)
-target_link_libraries(maw PUBLIC oo::blocking_queue)
+target_link_libraries(maw PUBLIC oo::lockfree_container)
 
 target_compile_definitions(maw PRIVATE
         $<$<NOT:$<BOOL:${MAW_MP3}>>:MA_NO_MP3>

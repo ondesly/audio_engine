@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <condition_variable>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -15,7 +16,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include <blocking_queue/blocking_queue.h>
+#include <lockfree_container/lockfree_container.h>
 
 #include "concurrent/lockfree_set.h"
 
@@ -57,7 +58,11 @@ namespace maw {
     private:
 
         std::unique_ptr<std::thread> m_service_thread;
-        oo::blocking_queue<std::pair<player::command, std::string>> m_queue;
+        mutable std::mutex m_mutex;
+        std::condition_variable m_condition;
+        std::atomic<bool> m_is_done{false};
+
+        oo::lockfree_container<std::pair<player::command, std::string>> m_queue;
 
         std::unordered_map<std::string, std::shared_ptr<maw::decoder>> m_decoders;
         oo::lockfree_set<std::shared_ptr<maw::decoder>> m_playing;
@@ -65,6 +70,8 @@ namespace maw {
         std::vector<float> m_callback_buf;
 
     private:
+
+        void queue_command(player::command command, const std::string &path);
 
         void run_service_thread();
 
