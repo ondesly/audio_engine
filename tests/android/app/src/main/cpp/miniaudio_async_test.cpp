@@ -31,25 +31,33 @@ maw::miniaudio_async_test::miniaudio_async_test() {
             return;
         }
 
-        while (!m_queue.is_done()) {
-            const auto command = m_queue.pop();
-
-            switch (command) {
-                case 'a':
-                    result = ma_device_start(&device);
-                    if (result != MA_SUCCESS) {
-                        return;
-                    }
+        char command;
+        while (true) {
+            if (m_queue.pop(command)) {
+                switch (command) {
+                    case 'a':
+                        result = ma_device_start(&device);
+                        if (result != MA_SUCCESS) {
+                            return;
+                        }
+                        break;
+                    case 'o':
+                        result = ma_device_stop(&device);
+                        if (result != MA_SUCCESS) {
+                            return;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                std::unique_lock<std::mutex> lock(m_mutex);
+                if (m_is_done) {
                     break;
-                case 'o':
-                    result = ma_device_stop(&device);
-                    if (result != MA_SUCCESS) {
-                        return;
-                    }
-                    break;
-                default:
-
-                    break;
+                } else {
+                    using namespace std::chrono_literals;
+                    m_condition.wait_for(lock, 100ms);
+                }
             }
         }
 
@@ -58,14 +66,22 @@ maw::miniaudio_async_test::miniaudio_async_test() {
 }
 
 maw::miniaudio_async_test::~miniaudio_async_test() {
-    m_queue.set_done();
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+
+        m_is_done = true;
+        m_condition.notify_all();
+    }
+
     m_service_thread->join();
 }
 
 void maw::miniaudio_async_test::start() {
     m_queue.push('a');
+    m_condition.notify_one();
 }
 
 void maw::miniaudio_async_test::stop() {
     m_queue.push('o');
+    m_condition.notify_one();
 }

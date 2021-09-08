@@ -8,10 +8,13 @@
 
 #pragma once
 
+#include <atomic>
+#include <condition_variable>
 #include <memory>
+#include <mutex>
 #include <thread>
 
-#include <blocking_queue/blocking_queue.h>
+#include <lockfree_container/lockfree_container.h>
 
 namespace maw {
 
@@ -31,7 +34,11 @@ namespace maw {
     private:
 
         std::unique_ptr<std::thread> m_service_thread;
-        oo::blocking_queue<char> m_queue;
+        mutable std::mutex m_mutex;
+        std::condition_variable m_condition;
+        std::atomic<bool> m_is_done{false};
+
+        oo::lockfree_container<char> m_queue;
 
     };
 
