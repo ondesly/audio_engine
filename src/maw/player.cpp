@@ -140,10 +140,13 @@ void maw::player::preload(maw::device &device, const std::string &path) {
 }
 
 void maw::player::release(maw::device &device, const std::string &path) {
-    const auto &decoder = m_decoders[path];
-    m_playing.erase(decoder);
+    auto decoder_it = m_decoders.find(path);
+    if (decoder_it == m_decoders.end()) {
+        return;
+    }
 
-    m_decoders.erase(path);
+    m_playing.erase(decoder_it->second);
+    m_decoders.erase(decoder_it);
 }
 
 void maw::player::play(maw::device &device, const std::string &path) {
@@ -157,8 +160,12 @@ void maw::player::play(maw::device &device, const std::string &path) {
 
     //
 
-    const auto &decoder = m_decoders[path];
-    m_playing.insert(decoder);
+    auto decoder_it = m_decoders.find(path);
+    if (decoder_it == m_decoders.end()) {
+        return;
+    }
+
+    m_playing.insert(decoder_it->second);
 
     //
 
@@ -175,12 +182,20 @@ void maw::player::stop(maw::device &device, const std::string &path) {
             device.stop();
         }
     } else {
-        const auto &decoder = m_decoders[path];
-        m_playing.erase(decoder);
+        auto decoder_it = m_decoders.find(path);
+        if (decoder_it == m_decoders.end()) {
+            return;
+        }
+
+        m_playing.erase(decoder_it->second);
     }
 }
 
 void maw::player::reset(maw::device &device, const std::string &path) {
-    const auto &decoder = m_decoders[path];
-    decoder->seek(0);
+    auto decoder_it = m_decoders.find(path);
+    if (decoder_it == m_decoders.end()) {
+        return;
+    }
+
+    decoder_it->second->seek(0);
 }
