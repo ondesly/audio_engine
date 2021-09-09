@@ -1,5 +1,5 @@
 //
-//  player.h
+//  engine.h
 //  maw
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 15.08.2021.
@@ -24,12 +24,12 @@ namespace maw {
 
     class device;
 
-    class player {
+    class engine {
     public:
 
-        player();
+        engine();
 
-        ~player();
+        ~engine();
 
     public:
 
@@ -60,7 +60,7 @@ namespace maw {
         std::condition_variable m_condition;
         std::atomic<bool> m_is_done{false};
 
-        oo::lockfree_container<std::pair<player::command, std::string>> m_queue;
+        oo::lockfree_container<std::pair<engine::command, std::string>> m_queue;
 
         std::unordered_map<std::string, std::shared_ptr<maw::decoder>> m_decoders;
         oo::lockfree_container<std::shared_ptr<maw::decoder>> m_playing;
@@ -69,13 +69,13 @@ namespace maw {
 
     private:
 
-        void queue_command(player::command command, const std::string &path);
+        void queue_command(engine::command command, const std::string &path);
 
         void run_service_thread();
 
         void device_callback(float *output, uint32_t frame_count, uint32_t channel_count);
 
-        void process_command(maw::device &device, player::command command, const std::string &path);
+        void process_command(maw::device &device, engine::command command, const std::string &path);
 
         void preload(maw::device &device, const std::string &path);
 

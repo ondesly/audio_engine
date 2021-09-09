@@ -13,7 +13,7 @@
 #include <string>
 
 #include <maw/a_asset_manager_holder.h>
-#include <maw/player.h>
+#include <maw/engine.h>
 
 #include "a_audio_test.h"
 #include "log_buffer.h"
@@ -35,7 +35,7 @@ namespace {
         return string;
     }
 
-    std::unique_ptr<maw::player> s_player;
+    std::unique_ptr<maw::engine> s_engine;
     std::unique_ptr<maw::a_audio_test> s_audio_test;
     std::unique_ptr<maw::miniaudio_test> s_mini_test;
     std::unique_ptr<maw::miniaudio_async_test> s_async_test;
@@ -61,13 +61,13 @@ Java_com_github_ondesly_maw_test_MainActivity_play(
         JNIEnv *env,
         jobject /* this */,
         jstring j_path) {
-    if (!s_player) {
-        s_player = std::make_unique<maw::player>();
+    if (!s_engine) {
+        s_engine = std::make_unique<maw::engine>();
     }
 
     const auto path = to_string(env, j_path);
 
-    s_player->play(path);
+    s_engine->play(path);
 }
 
 JNIEXPORT void JNICALL
@@ -75,27 +75,27 @@ Java_com_github_ondesly_maw_test_MainActivity_stop(
         JNIEnv *env,
         jobject /* this */,
         jstring j_path) {
-    if (!s_player) {
-        s_player = std::make_unique<maw::player>();
+    if (!s_engine) {
+        s_engine = std::make_unique<maw::engine>();
     }
 
     const auto path = to_string(env, j_path);
 
-    s_player->stop(path);
+    s_engine->stop(path);
 }
 
 JNIEXPORT void JNICALL
 Java_com_github_ondesly_maw_test_MainActivity_stopAll(
         JNIEnv *env,
         jobject /* this */) {
-    s_player->stop();
+    s_engine->stop();
 }
 
 JNIEXPORT void JNICALL
 Java_com_github_ondesly_maw_test_MainActivity_term(
         JNIEnv *env,
         jobject /* this */) {
-    s_player = nullptr;
+    s_engine = nullptr;
 }
 
 // AAudio

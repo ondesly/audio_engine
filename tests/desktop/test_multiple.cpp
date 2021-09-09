@@ -10,7 +10,7 @@
 #include <thread>
 #include <vector>
 
-#include <maw/player.h>
+#include <maw/engine.h>
 
 int main() {
     std::vector<std::string> paths{
@@ -20,15 +20,15 @@ int main() {
             "sample4.mp3"
     };
 
-    maw::player player{};
+    maw::engine engine{};
 
     srand(time(nullptr)); // NOLINT(cert-msc51-cpp)
     std::thread t([&]() {
         for (size_t i = 0; i < 100; ++i) {
             if (rand() % 3 == 0) { // NOLINT(cert-msc50-cpp)
-                player.stop(paths[rand() % 4]); // NOLINT(cert-msc50-cpp)
+                engine.stop(paths[rand() % 4]); // NOLINT(cert-msc50-cpp)
             } else {
-                player.play(paths[rand() % 4]); // NOLINT(cert-msc50-cpp)
+                engine.play(paths[rand() % 4]); // NOLINT(cert-msc50-cpp)
             }
             using namespace std::chrono_literals;
             std::this_thread::sleep_for(300ms);

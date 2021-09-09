@@ -1,5 +1,5 @@
 //
-//  test_player.cpp
+//  test_simple.cpp
 //  maw
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 16.08.2021.
@@ -8,25 +8,25 @@
 
 #include <iostream>
 
-#include <maw/player.h>
+#include <maw/engine.h>
 
 int main() {
-    maw::player controller{};
+    maw::engine engine{};
 
     std::cout << "initialized...";
     std::getchar();
 
-    controller.preload("sample.mp3");
+    engine.preload("sample.mp3");
 
     std::cout << "preloaded...";
     std::getchar();
 
-    controller.play("sample.mp3");
+    engine.play("sample.mp3");
 
     std::cout << "playing...";
     std::getchar();
 
-    controller.stop("sample.mp3");
+    engine.stop("sample.mp3");
 
     std::cout << "stopped...";
     std::getchar();

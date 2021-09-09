@@ -8,30 +8,30 @@
 
 #include <iostream>
 
-#include <maw/player.h>
+#include <maw/engine.h>
 
 int main() {
-    maw::player player{};
+    maw::engine engine{};
 
     std::cout << "initialized...";
     std::getchar();
 
-    player.preload("sample4.mp3");
+    engine.preload("sample4.mp3");
 
     std::cout << "preloaded...";
     std::getchar();
 
-    player.release("sample4.mp3");
+    engine.release("sample4.mp3");
 
     std::cout << "released...";
     std::getchar();
 
-    player.play("sample4.mp3");
+    engine.play("sample4.mp3");
 
     std::cout << "playing...";
     std::getchar();
 
-    player.stop("sample4.mp3");
+    engine.stop("sample4.mp3");
 
     std::cout << "stopped...";
     std::getchar();

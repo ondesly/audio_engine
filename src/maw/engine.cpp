@@ -1,5 +1,5 @@
 //
-//  player.cpp
+//  engine.cpp
 //  maw
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 15.08.2021.
@@ -13,33 +13,33 @@
 #include "maw/decoder.h"
 #include "maw/device.h"
 
-#include "maw/player.h"
+#include "maw/engine.h"
 
-maw::player::player() {
+maw::engine::engine() {
     run_service_thread();
 }
 
-void maw::player::preload(const std::string &path) {
-    queue_command(player::command::preload, path);
+void maw::engine::preload(const std::string &path) {
+    queue_command(engine::command::preload, path);
 }
 
-void maw::player::release(const std::string &path) {
-    queue_command(player::command::release, path);
+void maw::engine::release(const std::string &path) {
+    queue_command(engine::command::release, path);
 }
 
-void maw::player::play(const std::string &path) {
-    queue_command(player::command::play, path);
+void maw::engine::play(const std::string &path) {
+    queue_command(engine::command::play, path);
 }
 
-void maw::player::stop(const std::string &path) {
-    queue_command(player::command::stop, path);
+void maw::engine::stop(const std::string &path) {
+    queue_command(engine::command::stop, path);
 }
 
-void maw::player::reset(const std::string &path) {
-    queue_command(player::command::reset, path);
+void maw::engine::reset(const std::string &path) {
+    queue_command(engine::command::reset, path);
 }
 
-maw::player::~player() {
+maw::engine::~engine() {
     {
         std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -50,18 +50,18 @@ maw::player::~player() {
     m_service_thread->join();
 }
 
-void maw::player::queue_command(maw::player::command command, const std::string &path) {
+void maw::engine::queue_command(maw::engine::command command, const std::string &path) {
     m_queue.push({command, path});
     m_condition.notify_one();
 }
 
-void maw::player::run_service_thread() {
+void maw::engine::run_service_thread() {
     m_service_thread = std::make_unique<std::thread>([&]() {
         maw::device device{[this](float *output, uint32_t frame_count, uint32_t channel_count) {
             device_callback(output, frame_count, channel_count);
         }};
 
-        std::pair<player::command, std::string> command;
+        std::pair<engine::command, std::string> command;
         while (true) {
             if (m_queue.pop(command)) {
                 process_command(device, command.first, command.second);
@@ -78,7 +78,7 @@ void maw::player::run_service_thread() {
     });
 }
 
-void maw::player::device_callback(float *output, uint32_t frame_count, uint32_t channel_count) {
+void maw::engine::device_callback(float *output, uint32_t frame_count, uint32_t channel_count) {
     m_callback_buf.resize(frame_count * channel_count);
     bool end = true;
 
@@ -100,7 +100,7 @@ void maw::player::device_callback(float *output, uint32_t frame_count, uint32_t 
     }
 }
 
-void maw::player::process_command(maw::device &device, player::command command, const std::string &path) {
+void maw::engine::process_command(maw::device &device, engine::command command, const std::string &path) {
     switch (command) {
         case command::preload:
             preload(device, path);
@@ -120,7 +120,7 @@ void maw::player::process_command(maw::device &device, player::command command, 
     }
 }
 
-void maw::player::preload(maw::device &device, const std::string &path) {
+void maw::engine::preload(maw::device &device, const std::string &path) {
     const auto decoder = std::make_shared<maw::decoder>(path);
 
     if (!decoder->init()) {
@@ -138,7 +138,7 @@ void maw::player::preload(maw::device &device, const std::string &path) {
     m_decoders.emplace(path, decoder);
 }
 
-void maw::player::release(maw::device &device, const std::string &path) {
+void maw::engine::release(maw::device &device, const std::string &path) {
     auto decoder_it = m_decoders.find(path);
     if (decoder_it == m_decoders.end()) {
         return;
@@ -148,7 +148,7 @@ void maw::player::release(maw::device &device, const std::string &path) {
     m_decoders.erase(decoder_it);
 }
 
-void maw::player::play(maw::device &device, const std::string &path) {
+void maw::engine::play(maw::device &device, const std::string &path) {
     if (m_decoders.find(path) == m_decoders.end()) {
         preload(device, path);
     }
@@ -175,7 +175,7 @@ void maw::player::play(maw::device &device, const std::string &path) {
     }
 }
 
-void maw::player::stop(maw::device &device, const std::string &path) {
+void maw::engine::stop(maw::device &device, const std::string &path) {
     if (path.empty()) {
         if (!device.is_stopped()) {
             device.stop();
@@ -190,7 +190,7 @@ void maw::player::stop(maw::device &device, const std::string &path) {
     }
 }
 
-void maw::player::reset(maw::device &device, const std::string &path) {
+void maw::engine::reset(maw::device &device, const std::string &path) {
     auto decoder_it = m_decoders.find(path);
     if (decoder_it == m_decoders.end()) {
         return;

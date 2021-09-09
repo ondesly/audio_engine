@@ -11,15 +11,15 @@ set(MAW_SRC
 
 if (IOS)
     list(APPEND MAW_SRC
-            maw/player.mm
+            maw/engine.mm
             maw/decoder.cpp)
 elseif (ANDROID)
     list(APPEND MAW_SRC
-            maw/player.cpp
+            maw/engine.cpp
             maw/decoder_android.cpp)
 else ()
     list(APPEND MAW_SRC
-            maw/player.cpp
+            maw/engine.cpp
             maw/decoder.cpp)
 endif ()
 
@@ -41,10 +41,8 @@ target_compile_definitions(maw PRIVATE
 set(INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/../include)
 
 set(PUBLIC_HEADERS
-        ${INCLUDE_DIR}/concurrent/lockfree_set.h
-        ${INCLUDE_DIR}/concurrent/spinlock.h
         ${INCLUDE_DIR}/maw/a_asset_manager_holder.h
-        ${INCLUDE_DIR}/maw/player.h)
+        ${INCLUDE_DIR}/maw/engine.h)
 
 set_target_properties(maw PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
 

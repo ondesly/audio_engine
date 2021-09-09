@@ -8,13 +8,13 @@
 
 #include <memory>
 
-#include <maw/player.h>
+#include <maw/engine.h>
 
 #import "ViewController.h"
 
 namespace {
 
-    std::unique_ptr<maw::player> s_player;
+    std::unique_ptr<maw::engine> s_engine;
 
 }
 
@@ -31,37 +31,37 @@ namespace {
 }
 
 - (IBAction)playButtonTouch:(id)sender {
-    if (!s_player) {
-        s_player = std::make_unique<maw::player>();
+    if (!s_engine) {
+        s_engine = std::make_unique<maw::engine>();
     }
     
     NSBundle* bundle = [NSBundle mainBundle];
     NSString* nsPath = [bundle pathForResource:@"sample4" ofType:@"mp3"];
     
-    s_player->play([nsPath UTF8String]);
+    s_engine->play([nsPath UTF8String]);
 }
 
 - (IBAction)stopButtonTouch:(id)sender {
-    if (!s_player) {
-        s_player = std::make_unique<maw::player>();
+    if (!s_engine) {
+        s_engine = std::make_unique<maw::engine>();
     }
     
     NSBundle* bundle = [NSBundle mainBundle];
     NSString* nsPath = [bundle pathForResource:@"sample4" ofType:@"mp3"];
     
-    s_player->stop([nsPath UTF8String]);
+    s_engine->stop([nsPath UTF8String]);
 }
 
 - (IBAction)stopAllButtonTouch:(id)sender {
-    if (!s_player) {
-        s_player = std::make_unique<maw::player>();
+    if (!s_engine) {
+        s_engine = std::make_unique<maw::engine>();
     }
     
-    s_player->stop();
+    s_engine->stop();
 }
 
 - (IBAction)termButtonTouch:(id)sender {
-    s_player = nullptr;
+    s_engine = nullptr;
 }
 
 @end
