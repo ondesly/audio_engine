@@ -39,7 +39,7 @@ list(APPEND APP_RES
         Assets.xcassets
         LaunchScreen.storyboard
         Main.storyboard
-        ../res/sample.mp3)
+        ../res/sample4.mp3)
 
 list(APPEND SRC_SOURCE
         ${APP_RES})

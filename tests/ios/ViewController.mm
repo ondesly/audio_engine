@@ -27,16 +27,41 @@ namespace {
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+}
 
+- (IBAction)playButtonTouch:(id)sender {
     if (!s_player) {
         s_player = std::make_unique<maw::player>();
     }
     
     NSBundle* bundle = [NSBundle mainBundle];
-    NSString* nsPath = [bundle pathForResource:@"sample" ofType:@"mp3"];
-    std::string path = [nsPath UTF8String];
+    NSString* nsPath = [bundle pathForResource:@"sample4" ofType:@"mp3"];
     
-    s_player->play(path);
+    s_player->play([nsPath UTF8String]);
+}
+
+- (IBAction)stopButtonTouch:(id)sender {
+    if (!s_player) {
+        s_player = std::make_unique<maw::player>();
+    }
+    
+    NSBundle* bundle = [NSBundle mainBundle];
+    NSString* nsPath = [bundle pathForResource:@"sample4" ofType:@"mp3"];
+    
+    s_player->stop([nsPath UTF8String]);
+}
+
+- (IBAction)stopAllButtonTouch:(id)sender {
+    if (!s_player) {
+        s_player = std::make_unique<maw::player>();
+    }
+    
+    s_player->stop();
+}
+
+- (IBAction)termButtonTouch:(id)sender {
+    s_player = nullptr;
 }
 
 @end
