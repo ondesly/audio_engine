@@ -14,15 +14,20 @@ namespace {
 
     void data_callback(ma_device *device, void *output, const void *, ma_uint32 frame_count) {
         auto output_f32 = static_cast<float *>(output);
-        const auto channel_count = device->playback.channels;
-        const auto &callback = *static_cast<maw::callback *>(device->pUserData);
+        const auto &callback = *static_cast<maw::device::callback *>(device->pUserData);
 
-        callback(output_f32, frame_count, channel_count);
+        const auto total = callback(output_f32, frame_count, device->playback.channels);
+        
+        if (total < frame_count) {
+            ma_silence_pcm_frames(
+                    ma_offset_pcm_frames_ptr(output, total, device->playback.format, device->playback.channels),
+                    (frame_count - total), device->playback.format, device->playback.channels);
+        }
     }
 
 }
 
-maw::device::device(maw::callback callback) : m_callback(std::move(callback)) {
+maw::device::device(maw::device::callback callback) : m_callback(std::move(callback)) {
 
 }
 

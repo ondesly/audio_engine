@@ -14,12 +14,14 @@
 
 namespace maw {
 
-    using callback = std::function<void(float *output, ma_uint32 frame_count, ma_uint32 channel_count)>;
-
     class device {
     public:
 
-        explicit device(maw::callback callback);
+        using callback = std::function<ma_uint64(float *output, ma_uint32 frame_count, ma_uint32 channel_count)>;
+
+    public:
+
+        explicit device(maw::device::callback callback);
 
         ~device();
 
@@ -39,7 +41,7 @@ namespace maw {
 
     private:
 
-        maw::callback m_callback;
+        maw::device::callback m_callback;
 
         ma_context m_context = {};
         ma_device m_device = {};

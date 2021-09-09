@@ -73,7 +73,7 @@ namespace maw {
 
         void run_service_thread();
 
-        void device_callback(float *output, uint32_t frame_count, uint32_t channel_count);
+        uint64_t device_callback(float *output, uint32_t frame_count, uint32_t channel_count);
 
         void process_command(maw::device &device, engine::command command, const std::string &path);
 

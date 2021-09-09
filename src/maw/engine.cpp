@@ -58,7 +58,7 @@ void maw::engine::queue_command(maw::engine::command command, const std::string 
 void maw::engine::run_service_thread() {
     m_service_thread = std::make_unique<std::thread>([&]() {
         maw::device device{[this](float *output, uint32_t frame_count, uint32_t channel_count) {
-            device_callback(output, frame_count, channel_count);
+            return device_callback(output, frame_count, channel_count);
         }};
 
         std::pair<engine::command, std::string> command;
@@ -78,26 +78,28 @@ void maw::engine::run_service_thread() {
     });
 }
 
-void maw::engine::device_callback(float *output, uint32_t frame_count, uint32_t channel_count) {
+uint64_t maw::engine::device_callback(float *output, uint32_t frame_count, uint32_t channel_count) {
     m_callback_buf.resize(frame_count * channel_count);
-    bool end = true;
+    ma_uint64 total_read = 0;
 
     for (const auto &decoder: m_playing) {
         const auto read = decoder->read(output, m_callback_buf.data(), frame_count, channel_count);
+
+        total_read = std::max(total_read, read);
 
         if (read < frame_count) {
             const auto &path = decoder->get_path();
 
             stop(path);
             reset(path);
-        } else {
-            end = false;
         }
     }
 
-    if (end) {
+    if (total_read == 0) {
         stop();
     }
+
+    return total_read;
 }
 
 void maw::engine::process_command(maw::device &device, engine::command command, const std::string &path) {
