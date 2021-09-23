@@ -50,7 +50,13 @@ bool oo::audio::device::init(ma_format format, ma_uint32 channels, ma_uint32 sam
     device_config.pUserData = &m_callback;
     device_config.dataCallback = data_callback;
 
-    return ma_device_init(&m_context, &device_config, &m_device) == MA_SUCCESS;
+    if (ma_device_init(&m_context, &device_config, &m_device) == MA_SUCCESS) {
+        ma_device_set_master_volume(&m_device, m_volume);
+
+        return true;
+    } else {
+        return false;
+    }
 }
 
 bool oo::audio::device::is_inited() const {
@@ -71,4 +77,12 @@ bool oo::audio::device::stop() {
 
 bool oo::audio::device::is_stopped() const {
     return m_device.state == 1;
+}
+
+void oo::audio::device::set_volume(float value) {
+    m_volume = value;
+
+    if (is_inited()) {
+        ma_device_set_master_volume(&m_device, m_volume);
+    }
 }

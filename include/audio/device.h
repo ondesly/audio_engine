@@ -39,12 +39,16 @@ namespace oo::audio {
 
         [[nodiscard]] bool is_stopped() const;
 
+        void set_volume(float value);
+
     private:
 
         device::callback m_callback;
 
         ma_context m_context = {};
         ma_device m_device = {};
+
+        float m_volume = 1.F;
 
     };
 

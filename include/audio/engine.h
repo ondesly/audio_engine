@@ -44,6 +44,8 @@ namespace oo::audio {
 
         void reset(const std::string &path);
 
+        void set_volume(float value);
+
     private:
 
         enum class command {
@@ -51,7 +53,8 @@ namespace oo::audio {
             release,
             play,
             stop,
-            reset
+            reset,
+            volume
         };
 
     private:
@@ -87,6 +90,8 @@ namespace oo::audio {
         void stop(device &device, const std::string &path);
 
         void reset(device &device, const std::string &path);
+
+        void set_volume(device &device, float value);
 
     };
 

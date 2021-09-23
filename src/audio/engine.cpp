@@ -39,6 +39,10 @@ void oo::audio::engine::reset(const std::string &path) {
     queue_command(engine::command::reset, path);
 }
 
+void oo::audio::engine::set_volume(float value) {
+    queue_command(engine::command::volume, value);
+}
+
 oo::audio::engine::~engine() {
     {
         std::lock_guard<std::mutex> lock(m_mutex);
@@ -118,6 +122,9 @@ void oo::audio::engine::process_command(oo::audio::device &device, engine::comma
             break;
         case command::reset:
             reset(device, std::any_cast<std::string>(param));
+            break;
+        case command::volume:
+            set_volume(device, std::any_cast<float>(param));
             break;
     }
 }
@@ -199,4 +206,8 @@ void oo::audio::engine::reset(oo::audio::device &device, const std::string &path
     }
 
     decoder_it->second->seek(0);
+}
+
+void oo::audio::engine::set_volume(oo::audio::device &device, float value) { // NOLINT
+    device.set_volume(value);
 }
