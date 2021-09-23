@@ -50,8 +50,8 @@ oo::audio::engine::~engine() {
     m_service_thread->join();
 }
 
-void oo::audio::engine::queue_command(oo::audio::engine::command command, const std::string &path) {
-    m_queue.push({command, path});
+void oo::audio::engine::queue_command(oo::audio::engine::command command, const std::any &param) {
+    m_queue.push({command, param});
     m_condition.notify_one();
 }
 
@@ -61,7 +61,7 @@ void oo::audio::engine::run_service_thread() {
             return device_callback(output, frame_count, channel_count);
         }};
 
-        std::pair<engine::command, std::string> command;
+        std::pair<engine::command, std::any> command;
         while (true) {
             if (m_queue.pop(command)) {
                 process_command(device, command.first, command.second);
@@ -102,22 +102,22 @@ uint64_t oo::audio::engine::device_callback(float *output, uint32_t frame_count,
     return total_read;
 }
 
-void oo::audio::engine::process_command(oo::audio::device &device, engine::command command, const std::string &path) {
+void oo::audio::engine::process_command(oo::audio::device &device, engine::command command, const std::any &param) {
     switch (command) {
         case command::preload:
-            preload(device, path);
+            preload(device, std::any_cast<std::string>(param));
             break;
         case command::release:
-            release(device, path);
+            release(device, std::any_cast<std::string>(param));
             break;
         case command::play:
-            play(device, path);
+            play(device, std::any_cast<std::string>(param));
             break;
         case command::stop:
-            stop(device, path);
+            stop(device, std::any_cast<std::string>(param));
             break;
         case command::reset:
-            reset(device, path);
+            reset(device, std::any_cast<std::string>(param));
             break;
     }
 }

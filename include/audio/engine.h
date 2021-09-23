@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <any>
 #include <condition_variable>
 #include <memory>
 #include <mutex>
@@ -60,7 +61,7 @@ namespace oo::audio {
         std::condition_variable m_condition;
         std::atomic<bool> m_is_done{false};
 
-        oo::lockfree_container<std::pair<engine::command, std::string>> m_queue;
+        oo::lockfree_container<std::pair<engine::command, std::any>> m_queue;
 
         std::unordered_map<std::string, std::shared_ptr<decoder>> m_decoders;
         oo::lockfree_container<std::shared_ptr<decoder>> m_playing;
@@ -69,13 +70,13 @@ namespace oo::audio {
 
     private:
 
-        void queue_command(engine::command command, const std::string &path);
+        void queue_command(engine::command command, const std::any &param);
 
         void run_service_thread();
 
         uint64_t device_callback(float *output, uint32_t frame_count, uint32_t channel_count);
 
-        void process_command(device &device, engine::command command, const std::string &path);
+        void process_command(device &device, engine::command command, const std::any &param);
 
         void preload(device &device, const std::string &path);
 
