@@ -1,6 +1,6 @@
 //
 //  device.h
-//  maw
+//  audio_engine
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 28.08.2021.
 //  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
@@ -12,7 +12,7 @@
 
 #include <miniaudio.h>
 
-namespace maw {
+namespace oo::audio {
 
     class device {
     public:
@@ -21,7 +21,7 @@ namespace maw {
 
     public:
 
-        explicit device(maw::device::callback callback);
+        explicit device(device::callback callback);
 
         ~device();
 
@@ -41,7 +41,7 @@ namespace maw {
 
     private:
 
-        maw::device::callback m_callback;
+        device::callback m_callback;
 
         ma_context m_context = {};
         ma_device m_device = {};

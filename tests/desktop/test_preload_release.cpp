@@ -1,6 +1,6 @@
 //
 //  test_preload_release.cpp
-//  maw
+//  audio_engine
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 31.08.2021.
 //  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
@@ -8,10 +8,10 @@
 
 #include <iostream>
 
-#include <maw/engine.h>
+#include <audio/engine.h>
 
 int main() {
-    maw::engine engine{};
+    audio::engine engine{};
 
     std::cout << "initialized...";
     std::getchar();

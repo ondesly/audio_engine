@@ -6,7 +6,7 @@ android {
     compileSdkVersion 30
 
     defaultConfig {
-        applicationId "com.github.ondesly.maw.test"
+        applicationId "com.github.ondesly.audio_engine.test"
         minSdkVersion 27
         targetSdkVersion 30
         versionCode 1

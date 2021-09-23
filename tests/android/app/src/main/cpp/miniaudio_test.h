@@ -1,6 +1,6 @@
 //
 //  miniaudio_test.h
-//  maw
+//  audio_engine
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 03.09.2021.
 //  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
@@ -10,7 +10,7 @@
 
 #include <miniaudio.h>
 
-namespace maw {
+namespace oo::audio {
 
     class miniaudio_test {
     public:

@@ -1,6 +1,6 @@
 //
 //  test_multiple.cpp
-//  maw
+//  audio_engine
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 19.08.2021.
 //  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
@@ -10,7 +10,7 @@
 #include <thread>
 #include <vector>
 
-#include <maw/engine.h>
+#include <audio/engine.h>
 
 int main() {
     std::vector<std::string> paths{
@@ -20,7 +20,7 @@ int main() {
             "sample4.mp3"
     };
 
-    maw::engine engine{};
+    oo::audio::engine engine{};
 
     srand(time(nullptr)); // NOLINT(cert-msc51-cpp)
     std::thread t([&]() {

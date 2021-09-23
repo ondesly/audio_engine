@@ -1,6 +1,6 @@
 //
 //  a_audio_test.cpp
-//  maw
+//  audio_engine
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 03.09.2021.
 //  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
@@ -12,7 +12,7 @@
 
 #include "a_audio_test.h"
 
-maw::a_audio_test::a_audio_test() {
+oo::audio::a_audio_test::a_audio_test() {
     AAudioStreamBuilder *builder;
 
     auto result = AAudio_createStreamBuilder(&builder);
@@ -53,14 +53,14 @@ maw::a_audio_test::a_audio_test() {
     }
 }
 
-maw::a_audio_test::~a_audio_test() {
+oo::audio::a_audio_test::~a_audio_test() {
     auto result = AAudioStream_close(m_stream);
     if (result != AAUDIO_OK) {
         return;
     }
 }
 
-void maw::a_audio_test::start() {
+void oo::audio::a_audio_test::start() {
     auto result = AAudioStream_requestStart(m_stream);
     if (result != AAUDIO_OK) {
         AAudioStream_close(m_stream);
@@ -92,7 +92,7 @@ void maw::a_audio_test::start() {
     }
 }
 
-void maw::a_audio_test::stop() {
+void oo::audio::a_audio_test::stop() {
     auto result = AAudioStream_requestStop(m_stream);
     if (result != AAUDIO_OK) {
         AAudioStream_close(m_stream);

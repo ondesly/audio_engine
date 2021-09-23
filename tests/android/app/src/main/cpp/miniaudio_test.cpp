@@ -1,6 +1,6 @@
 //
 //  miniaudio_test.cpp
-//  maw
+//  audio_engine
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 03.09.2021.
 //  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
@@ -10,7 +10,7 @@
 
 #include "miniaudio_test.h"
 
-maw::miniaudio_test::miniaudio_test() {
+oo::audio::miniaudio_test::miniaudio_test() {
     ma_device_config device_config;
     device_config = ma_device_config_init(ma_device_type_playback);
     device_config.playback.format = ma_format_f32;
@@ -27,18 +27,18 @@ maw::miniaudio_test::miniaudio_test() {
     }
 }
 
-maw::miniaudio_test::~miniaudio_test() {
+oo::audio::miniaudio_test::~miniaudio_test() {
     ma_device_uninit(&m_device);
 }
 
-void maw::miniaudio_test::start() {
+void oo::audio::miniaudio_test::start() {
     auto result = ma_device_start(&m_device);
     if (result != MA_SUCCESS) {
         return;
     }
 }
 
-void maw::miniaudio_test::stop() {
+void oo::audio::miniaudio_test::stop() {
     auto result = ma_device_stop(&m_device);
     if (result != MA_SUCCESS) {
         return;

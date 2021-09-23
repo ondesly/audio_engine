@@ -1,6 +1,6 @@
 //
 //  miniaudio_async_test.h
-//  maw
+//  audio_engine
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 03.09.2021.
 //  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
@@ -16,7 +16,7 @@
 
 #include <lockfree_container/lockfree_container.h>
 
-namespace maw {
+namespace oo::audio {
 
     class miniaudio_async_test {
     public:

@@ -1,6 +1,6 @@
 //
 //  a_asset_manager_holder.h
-//  maw
+//  audio_engine
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 27.08.2021.
 //  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
@@ -10,7 +10,7 @@
 
 typedef struct AAssetManager AAssetManager;
 
-namespace maw {
+namespace oo::audio {
 
     class a_asset_manager_holder {
     public:

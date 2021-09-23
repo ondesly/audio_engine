@@ -1,6 +1,6 @@
 #
 #  CMakeLists.txt
-#  maw
+#  audio_engine
 #
 #  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 20.08.2021.
 #  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
@@ -52,7 +52,7 @@ add_executable(${TEST_NAME}
 
 target_link_system_libraries(${TEST_NAME})
 target_link_libraries(${TEST_NAME} PRIVATE
-        maw)
+        oo::audio_engine)
 
 target_include_directories(${TEST_NAME}
         PRIVATE ios)
@@ -64,14 +64,14 @@ set_target_properties(${TEST_NAME} PROPERTIES
         CXX_STANDARD 17 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 
 set_target_default_properties(${TEST_NAME})
-set_target_default_properties(maw)
+set_target_default_properties(audio_engine)
 
 target_compile_definitions(${TEST_NAME} PUBLIC $<$<CONFIG:Debug>:DEBUG=1>)
 
 #
 
 set_target_properties(${TEST_NAME} PROPERTIES
-        XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "com.github.ondesly.maw.test"
+        XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "com.github.ondesly.audio_engine.test"
         XCODE_ATTRIBUTE_MARKETING_VERSION ${CMAKE_PROJECT_VERSION}
 
         RESOURCE "${APP_RES}"

@@ -1,6 +1,6 @@
 //
 //  miniaudio_async_test.cpp
-//  maw
+//  audio_engine
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 03.09.2021.
 //  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
@@ -12,7 +12,7 @@
 
 #include "miniaudio_async_test.h"
 
-maw::miniaudio_async_test::miniaudio_async_test() {
+oo::audio::miniaudio_async_test::miniaudio_async_test() {
     m_service_thread = std::make_unique<std::thread>([&]() {
         ma_device_config device_config;
         device_config = ma_device_config_init(ma_device_type_playback);
@@ -65,7 +65,7 @@ maw::miniaudio_async_test::miniaudio_async_test() {
     });
 }
 
-maw::miniaudio_async_test::~miniaudio_async_test() {
+oo::audio::miniaudio_async_test::~miniaudio_async_test() {
     {
         std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -76,12 +76,12 @@ maw::miniaudio_async_test::~miniaudio_async_test() {
     m_service_thread->join();
 }
 
-void maw::miniaudio_async_test::start() {
+void oo::audio::miniaudio_async_test::start() {
     m_queue.push('a');
     m_condition.notify_one();
 }
 
-void maw::miniaudio_async_test::stop() {
+void oo::audio::miniaudio_async_test::stop() {
     m_queue.push('o');
     m_condition.notify_one();
 }

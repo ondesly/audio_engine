@@ -1,6 +1,6 @@
 //
 //  decoder.h
-//  maw
+//  audio_engine
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 26.08.2021.
 //  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
@@ -13,7 +13,7 @@
 
 #include <miniaudio.h>
 
-namespace maw {
+namespace oo::audio {
 
     class decoder {
     public:

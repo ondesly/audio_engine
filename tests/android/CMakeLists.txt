@@ -1,6 +1,6 @@
 #
 #  CMakeLists.txt
-#  maw
+#  audio_engine
 #
 #  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 20.08.2021.
 #  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
@@ -35,7 +35,7 @@ add_library(${TEST_NAME} SHARED ${SRC_SOURCE})
 
 target_link_system_libraries(${TEST_NAME})
 target_link_libraries(${TEST_NAME} PRIVATE
-        maw miniaudio)
+        oo::audio_engine miniaudio)
 
 #
 
@@ -44,7 +44,7 @@ set_target_properties(${TEST_NAME} PROPERTIES
         CXX_STANDARD 17 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
 
 set_target_default_properties(${TEST_NAME})
-set_target_default_properties(maw)
+set_target_default_properties(audio_engine)
 
 target_compile_definitions(${TEST_NAME} PUBLIC $<$<CONFIG:Debug>:DEBUG=1>)
 

@@ -1,6 +1,6 @@
 //
 //  log_buffer.h
-//  maw
+//  audio_engine
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 19.03.2021.
 //  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
@@ -10,7 +10,7 @@
 
 #include <iosfwd>
 
-namespace cc {
+namespace oo {
 
     class log_buffer : public std::streambuf {
     public:

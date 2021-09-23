@@ -1,6 +1,6 @@
 //
 //  ViewController.m
-//  maw
+//  audio_engine
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 20.08.2021.
 //  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
@@ -8,13 +8,13 @@
 
 #include <memory>
 
-#include <maw/engine.h>
+#include <audio/engine.h>
 
 #import "ViewController.h"
 
 namespace {
 
-    std::unique_ptr<maw::engine> s_engine;
+    std::unique_ptr<oo::audio::engine> s_engine;
 
 }
 
@@ -32,7 +32,7 @@ namespace {
 
 - (IBAction)playButtonTouch:(id)sender {
     if (!s_engine) {
-        s_engine = std::make_unique<maw::engine>();
+        s_engine = std::make_unique<oo::audio::engine>();
     }
     
     NSBundle* bundle = [NSBundle mainBundle];
@@ -43,7 +43,7 @@ namespace {
 
 - (IBAction)stopButtonTouch:(id)sender {
     if (!s_engine) {
-        s_engine = std::make_unique<maw::engine>();
+        s_engine = std::make_unique<oo::audio::engine>();
     }
     
     NSBundle* bundle = [NSBundle mainBundle];
@@ -54,7 +54,7 @@ namespace {
 
 - (IBAction)stopAllButtonTouch:(id)sender {
     if (!s_engine) {
-        s_engine = std::make_unique<maw::engine>();
+        s_engine = std::make_unique<oo::audio::engine>();
     }
     
     s_engine->stop();

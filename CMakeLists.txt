@@ -1,6 +1,6 @@
 #
 #  CMakeLists.txt
-#  maw
+#  audio_engine
 #
 #  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 14.08.2021.
 #  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
@@ -8,8 +8,8 @@
 
 cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 
-project(maw
-        VERSION 0.2.0
+project(audio_engine
+        VERSION 0.3.0
         LANGUAGES C CXX)
 
 #
@@ -22,9 +22,9 @@ endif ()
 # Options #
 ###########
 
-option(MAW_MP3 "Disable the built-in MP3 decoder" ON)
-option(MAW_WAV "Disable the built-in WAV decoder and encoder" OFF)
-option(MAW_FLAC "Disable the built-in FLAC decoder" OFF)
+option(AUDIO_ENGINE_MP3 "Enable the built-in MP3 decoder" ON)
+option(AUDIO_ENGINE_WAV "Enable the built-in WAV decoder and encoder" OFF)
+option(AUDIO_ENGINE_FLAC "Enable the built-in FLAC decoder" OFF)
 
 ################
 # Dependencies #
@@ -50,24 +50,11 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(lockfree_container miniaudio)
 
-#########
-# Build #
-#########
+##########
+# Source #
+##########
 
 add_subdirectory(src)
-
-###########
-# Install #
-###########
-
-include(GNUInstallDirs)
-
-install(TARGETS ${PROJECT_NAME} miniaudio
-        EXPORT ${PROJECT_NAME}-config
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}${INSTALL_SUFFIX}
-        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}${INSTALL_SUFFIX}/${PROJECT_NAME})
-
-install(EXPORT ${PROJECT_NAME}-config DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 
 ###########
 # Testing #

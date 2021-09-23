@@ -1,6 +1,6 @@
 //
 //  engine.h
-//  maw
+//  audio_engine
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 15.08.2021.
 //  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
@@ -18,7 +18,7 @@
 
 #include <lockfree_container/lockfree_container.h>
 
-namespace maw {
+namespace oo::audio {
 
     class decoder;
 
@@ -62,8 +62,8 @@ namespace maw {
 
         oo::lockfree_container<std::pair<engine::command, std::string>> m_queue;
 
-        std::unordered_map<std::string, std::shared_ptr<maw::decoder>> m_decoders;
-        oo::lockfree_container<std::shared_ptr<maw::decoder>> m_playing;
+        std::unordered_map<std::string, std::shared_ptr<decoder>> m_decoders;
+        oo::lockfree_container<std::shared_ptr<decoder>> m_playing;
 
         std::vector<float> m_callback_buf;
 
@@ -75,17 +75,17 @@ namespace maw {
 
         uint64_t device_callback(float *output, uint32_t frame_count, uint32_t channel_count);
 
-        void process_command(maw::device &device, engine::command command, const std::string &path);
+        void process_command(device &device, engine::command command, const std::string &path);
 
-        void preload(maw::device &device, const std::string &path);
+        void preload(device &device, const std::string &path);
 
-        void release(maw::device &device, const std::string &path);
+        void release(device &device, const std::string &path);
 
-        void play(maw::device &device, const std::string &path);
+        void play(device &device, const std::string &path);
 
-        void stop(maw::device &device, const std::string &path);
+        void stop(device &device, const std::string &path);
 
-        void reset(maw::device &device, const std::string &path);
+        void reset(device &device, const std::string &path);
 
     };
 

@@ -1,6 +1,6 @@
 //
 //  device.cpp
-//  maw
+//  audio_engine
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 28.08.2021.
 //  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
@@ -8,13 +8,13 @@
 
 #include <utility>
 
-#include "maw/device.h"
+#include "audio/device.h"
 
 namespace {
 
     void data_callback(ma_device *device, void *output, const void *, ma_uint32 frame_count) {
         auto output_f32 = static_cast<float *>(output);
-        const auto &callback = *static_cast<maw::device::callback *>(device->pUserData);
+        const auto &callback = *static_cast<oo::audio::device::callback *>(device->pUserData);
 
         const auto total = callback(output_f32, frame_count, device->playback.channels);
         
@@ -27,16 +27,16 @@ namespace {
 
 }
 
-maw::device::device(maw::device::callback callback) : m_callback(std::move(callback)) {
+oo::audio::device::device(oo::audio::device::callback callback) : m_callback(std::move(callback)) {
 
 }
 
-maw::device::~device() {
+oo::audio::device::~device() {
     ma_device_uninit(&m_device);
     ma_context_uninit(&m_context);
 }
 
-bool maw::device::init(ma_format format, ma_uint32 channels, ma_uint32 sample_rate) {
+bool oo::audio::device::init(ma_format format, ma_uint32 channels, ma_uint32 sample_rate) {
     ma_context_config context_config = ma_context_config_init();
     context_config.coreaudio.sessionCategory = ma_ios_session_category_ambient;
     context_config.coreaudio.sessionCategoryOptions = ma_ios_session_category_option_mix_with_others;
@@ -53,22 +53,22 @@ bool maw::device::init(ma_format format, ma_uint32 channels, ma_uint32 sample_ra
     return ma_device_init(&m_context, &device_config, &m_device) == MA_SUCCESS;
 }
 
-bool maw::device::is_inited() const {
+bool oo::audio::device::is_inited() const {
     return m_device.state != 0;
 }
 
-bool maw::device::start() {
+bool oo::audio::device::start() {
     return ma_device_start(&m_device) == MA_SUCCESS;
 }
 
-bool maw::device::is_started() const {
+bool oo::audio::device::is_started() const {
     return m_device.state == 2;
 }
 
-bool maw::device::stop() {
+bool oo::audio::device::stop() {
     return ma_device_stop(&m_device) == MA_SUCCESS;
 }
 
-bool maw::device::is_stopped() const {
+bool oo::audio::device::is_stopped() const {
     return m_device.state == 1;
 }

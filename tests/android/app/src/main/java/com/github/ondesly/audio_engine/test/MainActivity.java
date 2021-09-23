@@ -1,12 +1,12 @@
 //
 //  MainActivity.java
-//  maw
+//  audio_engine
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 22.08.2021.
 //  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
 //
 
-package com.github.ondesly.maw.test;
+package com.github.ondesly.audio_engine.test;
 
 import android.content.res.AssetManager;
 import android.os.Bundle;
@@ -14,7 +14,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.github.ondesly.maw.test.databinding.ActivityMainBinding;
+import com.github.ondesly.audio_engine.test.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
 
     private native void setAssetManager(AssetManager assetManager);
 
-    // MAW
+    // Audio engine
 
     private native void play(String path);
 

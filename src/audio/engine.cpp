@@ -1,6 +1,6 @@
 //
 //  engine.cpp
-//  maw
+//  audio_engine
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 15.08.2021.
 //  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
@@ -10,36 +10,36 @@
 
 #include <miniaudio.h>
 
-#include "maw/decoder.h"
-#include "maw/device.h"
+#include "audio/decoder.h"
+#include "audio/device.h"
 
-#include "maw/engine.h"
+#include "audio/engine.h"
 
-maw::engine::engine() {
+oo::audio::engine::engine() {
     run_service_thread();
 }
 
-void maw::engine::preload(const std::string &path) {
+void oo::audio::engine::preload(const std::string &path) {
     queue_command(engine::command::preload, path);
 }
 
-void maw::engine::release(const std::string &path) {
+void oo::audio::engine::release(const std::string &path) {
     queue_command(engine::command::release, path);
 }
 
-void maw::engine::play(const std::string &path) {
+void oo::audio::engine::play(const std::string &path) {
     queue_command(engine::command::play, path);
 }
 
-void maw::engine::stop(const std::string &path) {
+void oo::audio::engine::stop(const std::string &path) {
     queue_command(engine::command::stop, path);
 }
 
-void maw::engine::reset(const std::string &path) {
+void oo::audio::engine::reset(const std::string &path) {
     queue_command(engine::command::reset, path);
 }
 
-maw::engine::~engine() {
+oo::audio::engine::~engine() {
     {
         std::lock_guard<std::mutex> lock(m_mutex);
 
@@ -50,14 +50,14 @@ maw::engine::~engine() {
     m_service_thread->join();
 }
 
-void maw::engine::queue_command(maw::engine::command command, const std::string &path) {
+void oo::audio::engine::queue_command(oo::audio::engine::command command, const std::string &path) {
     m_queue.push({command, path});
     m_condition.notify_one();
 }
 
-void maw::engine::run_service_thread() {
+void oo::audio::engine::run_service_thread() {
     m_service_thread = std::make_unique<std::thread>([&]() {
-        maw::device device{[this](float *output, uint32_t frame_count, uint32_t channel_count) {
+        oo::audio::device device{[this](float *output, uint32_t frame_count, uint32_t channel_count) {
             return device_callback(output, frame_count, channel_count);
         }};
 
@@ -78,7 +78,7 @@ void maw::engine::run_service_thread() {
     });
 }
 
-uint64_t maw::engine::device_callback(float *output, uint32_t frame_count, uint32_t channel_count) {
+uint64_t oo::audio::engine::device_callback(float *output, uint32_t frame_count, uint32_t channel_count) {
     m_callback_buf.resize(frame_count * channel_count);
     ma_uint64 total_read = 0;
 
@@ -102,7 +102,7 @@ uint64_t maw::engine::device_callback(float *output, uint32_t frame_count, uint3
     return total_read;
 }
 
-void maw::engine::process_command(maw::device &device, engine::command command, const std::string &path) {
+void oo::audio::engine::process_command(oo::audio::device &device, engine::command command, const std::string &path) {
     switch (command) {
         case command::preload:
             preload(device, path);
@@ -122,8 +122,8 @@ void maw::engine::process_command(maw::device &device, engine::command command, 
     }
 }
 
-void maw::engine::preload(maw::device &device, const std::string &path) {
-    const auto decoder = std::make_shared<maw::decoder>(path);
+void oo::audio::engine::preload(oo::audio::device &device, const std::string &path) {
+    const auto decoder = std::make_shared<oo::audio::decoder>(path);
 
     if (!decoder->init()) {
         return;
@@ -140,7 +140,7 @@ void maw::engine::preload(maw::device &device, const std::string &path) {
     m_decoders.emplace(path, decoder);
 }
 
-void maw::engine::release(maw::device &device, const std::string &path) {
+void oo::audio::engine::release(oo::audio::device &device, const std::string &path) {
     auto decoder_it = m_decoders.find(path);
     if (decoder_it == m_decoders.end()) {
         return;
@@ -150,7 +150,7 @@ void maw::engine::release(maw::device &device, const std::string &path) {
     m_decoders.erase(decoder_it);
 }
 
-void maw::engine::play(maw::device &device, const std::string &path) {
+void oo::audio::engine::play(oo::audio::device &device, const std::string &path) {
     if (m_decoders.find(path) == m_decoders.end()) {
         preload(device, path);
     }
@@ -177,7 +177,7 @@ void maw::engine::play(maw::device &device, const std::string &path) {
     }
 }
 
-void maw::engine::stop(maw::device &device, const std::string &path) {
+void oo::audio::engine::stop(oo::audio::device &device, const std::string &path) {
     if (path.empty()) {
         if (!device.is_stopped()) {
             device.stop();
@@ -192,7 +192,7 @@ void maw::engine::stop(maw::device &device, const std::string &path) {
     }
 }
 
-void maw::engine::reset(maw::device &device, const std::string &path) {
+void oo::audio::engine::reset(oo::audio::device &device, const std::string &path) {
     auto decoder_it = m_decoders.find(path);
     if (decoder_it == m_decoders.end()) {
         return;

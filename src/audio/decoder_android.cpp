@@ -1,6 +1,6 @@
 //
 //  decoder_android.cpp
-//  maw
+//  audio_engine
 //
 //  Created by Dmitrii Torkhov <dmitriitorkhov@gmail.com> on 27.08.2021.
 //  Copyright © 2021 Dmitrii Torkhov. All rights reserved.
@@ -8,9 +8,9 @@
 
 #include <android/asset_manager.h>
 
-#include "maw/a_asset_manager_holder.h"
+#include "audio/a_asset_manager_holder.h"
 
-#include "maw/decoder.h"
+#include "audio/decoder.h"
 
 namespace {
 
@@ -90,24 +90,24 @@ namespace {
 
 }
 
-maw::decoder::decoder(std::string path) : m_path(std::move(path)) {
+oo::audio::decoder::decoder(std::string path) : m_path(std::move(path)) {
     a_asset_manager_holder holder{};
     s_asset_manager = holder.get();
 }
 
-maw::decoder::~decoder() {
+oo::audio::decoder::~decoder() {
     ma_decoder_uninit(&m_decoder);
 }
 
-std::string maw::decoder::get_path() const {
+std::string oo::audio::decoder::get_path() const {
     return m_path;
 }
 
-bool maw::decoder::init() {
+bool oo::audio::decoder::init() {
     return ma_decoder_init_vfs(&s_vfs, m_path.c_str(), nullptr, &m_decoder) == MA_SUCCESS;
 }
 
-ma_uint64 maw::decoder::read(float *output, float *buf, ma_uint64 frame_count, ma_uint64 channel_count) {
+ma_uint64 oo::audio::decoder::read(float *output, float *buf, ma_uint64 frame_count, ma_uint64 channel_count) {
     const auto read = ma_decoder_read_pcm_frames(&m_decoder, buf, frame_count);
     for (size_t i = 0; i < read * channel_count; ++i) {
         output[i] += buf[i];
@@ -115,18 +115,18 @@ ma_uint64 maw::decoder::read(float *output, float *buf, ma_uint64 frame_count, m
     return read;
 }
 
-bool maw::decoder::seek(ma_uint64 frame) {
+bool oo::audio::decoder::seek(ma_uint64 frame) {
     return ma_decoder_seek_to_pcm_frame(&m_decoder, frame) == MA_SUCCESS;
 }
 
-ma_format maw::decoder::get_output_format() const {
+ma_format oo::audio::decoder::get_output_format() const {
     return m_decoder.outputFormat;
 }
 
-ma_uint32 maw::decoder::get_output_channels() const {
+ma_uint32 oo::audio::decoder::get_output_channels() const {
     return m_decoder.outputChannels;
 }
 
-ma_uint32 maw::decoder::get_output_sample_rate() const {
+ma_uint32 oo::audio::decoder::get_output_sample_rate() const {
     return m_decoder.outputSampleRate;
 }
