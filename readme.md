@@ -1,4 +1,4 @@
-# maw
+# Audio Engine
 C++ wrapper for the miniaudio - audio playback and capture library.
 
 ## Requirements
